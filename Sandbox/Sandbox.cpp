@@ -7,7 +7,7 @@ class Sandbox : public mk::Application
 
 public:
 
-	Sandbox() = default;
+	Sandbox()  = default;
 	~Sandbox() = default;
 
 private:

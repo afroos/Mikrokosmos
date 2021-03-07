@@ -35,5 +35,14 @@
     <ClCompile Include="Diagnostics\Logger.cppm">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UI\Window.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Win32\Win32Window.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UI.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,10 +1,15 @@
 module;
 
+#include <memory>
+
+#include <GLFW/glfw3.h>
+
 #include <Mikrokosmos/Core.h>
 
 export module Mikrokosmos.Applications.Application;
 
 import Mikrokosmos.Diagnostics.Logger;
+import Mikrokosmos.UI.Window;
 
 export namespace mk
 {
@@ -13,7 +18,7 @@ export namespace mk
 
 	public:
 
-		Application() = default;
+		Application();
 		virtual ~Application() = default;
 
 		Application(const Application&) = delete;
@@ -22,10 +27,17 @@ export namespace mk
 		void run()
 		{
 			mk::trace("Application starting.");
-			while (true);
+			while (true)
+			{
+				glClearColor(1, 0, 1, 1);
+				glClear(GL_COLOR_BUFFER_BIT);
+				_window->onUpdate();
+			}
 		}
 
 	private:
+
+		std::unique_ptr<Window> _window;
 
 	};
 
@@ -33,5 +45,12 @@ export namespace mk
 
 module :private;
 
+namespace mk
+{
+	Application::Application()
+	{
+		_window = std::unique_ptr<Window>(Window::create(WindowDescription{}));
+	}
+}
 
 

@@ -62,12 +62,17 @@
       <PreprocessorDefinitions>MK_PLATFORM_WINDOWS;MK_BUILD_DLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)External\spdlog\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)External\spdlog\include;$(SolutionDir)External\GLFW\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /y $(SolutionDir)Build\$(ProjectName)\$(Configuration)-$(Platform)\Mikrokosmos.dll  $(SolutionDir)Build\Sandbox\$(Configuration)-$(Platform)\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -77,7 +82,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>MK_PLATFORM_WINDOWS;MK_BUILD_DLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)External\spdlog\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)External\spdlog\include;$(SolutionDir)External\GLFW\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -85,7 +90,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\GLFW\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /y $(SolutionDir)Build\$(ProjectName)\$(Configuration)-$(Platform)\Mikrokosmos.dll  $(SolutionDir)Build\Sandbox\$(Configuration)-$(Platform)\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
@@ -93,6 +103,9 @@
   <ItemGroup>
     <ClCompile Include="Applications\Application.cppm" />
     <ClCompile Include="Applications\Applications.cppm" />
+    <ClCompile Include="Platform\Win32\Win32Window.cppm" />
+    <ClCompile Include="UI\UI.cppm" />
+    <ClCompile Include="UI\Window.cppm" />
     <ClCompile Include="Diagnostics\Diagnostics.cppm" />
     <ClCompile Include="Diagnostics\Logger.cppm" />
     <ClCompile Include="Mikrokosmos.cppm" />

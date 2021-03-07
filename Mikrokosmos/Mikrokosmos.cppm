@@ -8,4 +8,5 @@ export import Mikrokosmos.Diagnostics;
 //export import Mikrokosmos.Graphics;
 //export import Mikrokosmos.Mathematics;
 //export import Mikrokosmos.Physics;
-//export import Mikrokosmos.UI;
+export import Mikrokosmos.UI;
+//export import Mikrokosmos.Platform.Win32.Window;
