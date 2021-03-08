@@ -5,6 +5,6 @@
 
 #ifdef MK_PLATFORM_WINDOWS
 	#ifdef MK_BUILD_DLL
-		#define MK_EXPORT __declspec(dllexport)
+		#define MK_API __declspec(dllexport)
 	#endif
 #endif

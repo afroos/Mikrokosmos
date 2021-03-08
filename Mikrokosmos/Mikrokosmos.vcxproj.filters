@@ -44,5 +44,11 @@
     <ClCompile Include="UI\UI.cppm">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Events\Event.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\EventDispatcher.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

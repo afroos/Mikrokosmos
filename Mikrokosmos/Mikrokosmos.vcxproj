@@ -103,6 +103,8 @@
   <ItemGroup>
     <ClCompile Include="Applications\Application.cppm" />
     <ClCompile Include="Applications\Applications.cppm" />
+    <ClCompile Include="Events\Event.cppm" />
+    <ClCompile Include="Events\EventDispatcher.cppm" />
     <ClCompile Include="Platform\Win32\Win32Window.cppm" />
     <ClCompile Include="UI\UI.cppm" />
     <ClCompile Include="UI\Window.cppm" />

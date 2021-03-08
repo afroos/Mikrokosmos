@@ -9,88 +9,104 @@ module;
 
 export module Mikrokosmos.Diagnostics.Logger;
 
-export namespace mk
+namespace mk
 {
-	class Logger
+	export
 	{
-
-	public:
-
-		MK_EXPORT static Logger& get()
+		class Logger
 		{
-			static Logger logger;
-			return logger;
+
+		public:
+
+			MK_API static Logger& get()
+			{
+				static Logger logger;
+				return logger;
+			}
+
+			Logger(const Logger&) = delete;
+			Logger(Logger&&) = delete;
+			Logger& operator=(const Logger&) = delete;
+			Logger& operator=(Logger&&) = delete;
+
+			template<typename StringFormat, typename... Arguments>
+			void trace(const StringFormat& format, Arguments&&... arguments);
+
+			template<typename StringFormat, typename... Arguments>
+			void info(const StringFormat& format, Arguments&&... arguments);
+
+			template<typename StringFormat, typename... Arguments>
+			void warning(const StringFormat& format, Arguments&&... arguments);
+
+			template<typename StringFormat, typename... Arguments>
+			void error(const StringFormat& format, Arguments&&... arguments);
+
+		private:
+
+			Logger();
+			~Logger() = default;
+
+		private:
+
+			std::shared_ptr<spdlog::logger> _logger;
+
+		};
+
+		template<typename StringFormat, typename... Arguments>
+		MK_API void trace(const StringFormat& format, Arguments&&... arguments)
+		{
+			Logger::get().trace(format, arguments...);
 		}
 
-		Logger(const Logger&) = delete;
-		Logger(Logger&&) = delete;
-		Logger& operator=(const Logger&) = delete;
-		Logger& operator=(Logger&&) = delete;
+		template<typename StringFormat, typename... Arguments>
+		MK_API void info(const StringFormat& format, Arguments&&... arguments)
+		{
+			Logger::get().info(format, arguments...);
+		}
 
 		template<typename StringFormat, typename... Arguments>
-		void trace(const StringFormat& format, Arguments&&... arguments);
+		MK_API void warning(const StringFormat& format, Arguments&&... arguments)
+		{
+			Logger::get().warning(format, arguments...);
+		}
 
 		template<typename StringFormat, typename... Arguments>
-		void info(const StringFormat& format, Arguments&&... arguments);
+		MK_API void error(const StringFormat& format, Arguments&&... arguments)
+		{
+			Logger::get().error(format, arguments...);
+		}
 
-		template<typename StringFormat, typename... Arguments>
-		void warning(const StringFormat& format, Arguments&&... arguments);
-
-		template<typename StringFormat, typename... Arguments>
-		void error(const StringFormat& format, Arguments&&... arguments);
-
-	private:
-
-		Logger();
-		~Logger() = default;
-
-	private:
-
-		std::shared_ptr<spdlog::logger> _logger;
-
-	};
-
-	template<typename StringFormat, typename... Arguments>
-	MK_EXPORT void trace(const StringFormat& format, Arguments&&... arguments)
-	{
-		Logger::get().trace(format, arguments...);
 	}
 
 	template<typename StringFormat, typename... Arguments>
-	MK_EXPORT void info(const StringFormat& format, Arguments&&... arguments)
+	void Logger::trace(const StringFormat& format, Arguments&&... arguments) 
 	{
-		Logger::get().info(format, arguments...);
+		_logger->trace(format, arguments...); 
 	}
 
 	template<typename StringFormat, typename... Arguments>
-	MK_EXPORT void warning(const StringFormat& format, Arguments&&... arguments)
-	{
-		Logger::get().warning(format, arguments...);
+	void Logger::info(const StringFormat& format, Arguments&&... arguments) 
+	{ 
+		_logger->info(format, arguments...); 
 	}
 
 	template<typename StringFormat, typename... Arguments>
-	MK_EXPORT void error(const StringFormat& format, Arguments&&... arguments)
-	{
-		Logger::get().error(format, arguments...);
+	void Logger::warning(const StringFormat& format, Arguments&&... arguments) 
+	{ 
+		_logger->warn(format, arguments...); 
 	}
 
-	MK_EXPORT void dummy() // Just to instantiate the template for export.
+	template<typename StringFormat, typename... Arguments>
+	void Logger::error(const StringFormat& format, Arguments&&... arguments) 
+	{ 
+		_logger->error(format, arguments...); 
+	}
+
+	void dummy() // Just to instantiate the template for export.
 	{
 		Logger::get().trace("");
 		mk::trace("");
 	}
-
-	template<typename StringFormat, typename... Arguments>
-	void Logger::trace(const StringFormat& format, Arguments&&... arguments)   { _logger->trace(format, arguments...); }
-
-	template<typename StringFormat, typename... Arguments>
-	void Logger::info(const StringFormat& format, Arguments&&... arguments)    { _logger->info(format, arguments...); }
-
-	template<typename StringFormat, typename... Arguments>
-	void Logger::warning(const StringFormat& format, Arguments&&... arguments) { _logger->warn(format, arguments...); }
-
-	template<typename StringFormat, typename... Arguments>
-	void Logger::error(const StringFormat& format, Arguments&&... arguments)   { _logger->error(format, arguments...); }
 
 }
 
