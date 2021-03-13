@@ -21,7 +21,7 @@ int main()
 
 	try
 	{
-		application->run();
+		application->Run();
 	}
 	catch (const std::exception& exception)
 	{

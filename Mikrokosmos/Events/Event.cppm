@@ -1,6 +1,7 @@
 module;
 
-//#include <memory>
+#include <ostream>
+#include <string>
 
 //#include <Mikrokosmos/Core.h>
 
@@ -19,15 +20,20 @@ namespace mk
 
 			virtual ~Event() = default;
 
-			bool handled() const;
+			virtual std::string Name() const = 0;
 
-			void handled(bool value);
+			virtual std::string ToString() const;
 
 		private:
 
 			bool _handled{ false };
 
 		};
+
+		std::ostream& operator<<(std::ostream& output, const Event& event)
+		{
+			return output << "Event: " << event.ToString();
+		}
 
 	}
 
@@ -38,14 +44,9 @@ module :private;
 namespace mk
 {
 
-	bool Event::handled() const
+	std::string Event::ToString() const
 	{
-		return _handled;
-	}
-
-	void Event::handled(bool value)
-	{
-		_handled = value;
+		return Name();
 	}
 
 }

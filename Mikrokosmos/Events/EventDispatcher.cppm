@@ -1,42 +1,115 @@
-/*module;
+module;
 
-#include <memory>
+#include <functional>
+#include <vector>
 
-#include <Mikrokosmos/Core.h>
+//#include <Mikrokosmos/Core.h>
 
-export module Mikrokosmos.UI.Window;
+export module Mikrokosmos.Events.EventDispatcher;
 
-export namespace mk
+import Mikrokosmos.Events.Event;
+import Mikrokosmos.Events.Delegate;
+
+namespace mk
 {
-
-	struct Extent2D
-	{
-		std::size_t width;
-		std::size_t height;
-	};
-
-	struct WindowDescription
-	{
-		std::string title = "Mikrokosmos Framework";
-		Extent2D    size  = {1280, 720};
-	};
-
-	class MK_EXPORT Window
+	export
 	{
 
-	public:
+		template <typename Event>
+		class EventDispatcher
+		{
 
-		virtual ~Window() = default;
+		public:
 
-		static std::unique_ptr<Window> create(const WindowDescription& description);
+			using EventCallback = Delegate<void(const Event&)>;
 
-		virtual void onUpdate() = 0;
+			EventDispatcher() = default;
 
-	private:
+			template<typename Object>
+			using Method = void(Object::*)(const Event&);
 
-	};
+			template<typename Object>
+			void AddListener(Object* object, Method<Object> method)
+			{
+				EventCallback callback;
+				callback.Bind(object, method);
+				_callbacks.emplace_back(callback);
+			}
+
+			void Fire(const Event& event = Event{})
+			{
+				for (auto& callback : _callbacks)
+				{
+					callback(event);
+				}
+			}
+
+		private:
+			
+			std::vector<EventCallback> _callbacks;
+
+		};
+
+	}
 
 }
 
 module :private;
+
+namespace mk
+{
+
+
+}
+
+
+
+
+
+/*
+
+int Foo(float a, char b);                       // == int(*)(float, char)
+int Clazz::Foo(const float& a, char b);         // == int(*Clazz::)(const float&, char)
+[this](float a, char b){};                      // == ????
+
+
+#include <iostream>
+#include <functional>
+
+template <typename>
+class Delegate;
+
+template <typename R, typename... Args>
+class Delegate<R(Args...)>
+ {
+   public:
+	  template<typename T>
+	  void connect (T * t, R(T::*method)(Args...) )
+	   { mFunction = [=](Args ... as){ (t->*method)(as...); }; }
+
+	  R operator() (Args... args)
+	   { return mFunction(args...); }
+
+   protected:
+	  std::function<R(Args...)> mFunction;
+ };
+
+class A
+ { public: Delegate<void(int)> test; };
+
+class B
+ { public: void test (int a) { std::cout << a; }; };
+
+int main()
+ {
+   A a;
+   B b;
+
+   a.test.connect(&b, &B::test);
+
+   a.test(42);
+ }
+
+
+
 */

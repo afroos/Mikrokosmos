@@ -103,8 +103,13 @@
   <ItemGroup>
     <ClCompile Include="Applications\Application.cppm" />
     <ClCompile Include="Applications\Applications.cppm" />
+    <ClCompile Include="Events\Delegate.cppm" />
     <ClCompile Include="Events\Event.cppm" />
     <ClCompile Include="Events\EventDispatcher.cppm" />
+    <ClCompile Include="Events\Events.cppm" />
+    <ClCompile Include="Events\MouseEvents.cppm" />
+    <ClCompile Include="Events\WindowEvents.cppm" />
+    <ClCompile Include="Graphics\Extent2D.cppm" />
     <ClCompile Include="Platform\Win32\Win32Window.cppm" />
     <ClCompile Include="UI\UI.cppm" />
     <ClCompile Include="UI\Window.cppm" />

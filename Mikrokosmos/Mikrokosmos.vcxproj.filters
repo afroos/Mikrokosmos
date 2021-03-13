@@ -50,5 +50,20 @@
     <ClCompile Include="Events\EventDispatcher.cppm">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Events\WindowEvents.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\Events.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\MouseEvents.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\Delegate.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Extent2D.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

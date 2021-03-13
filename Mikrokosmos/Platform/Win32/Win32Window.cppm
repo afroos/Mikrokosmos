@@ -24,7 +24,7 @@ namespace mk
 
 			virtual ~Win32Window();
 
-			void onUpdate() override;
+			void OnUpdate() override;
 
 		private:
 
@@ -43,7 +43,7 @@ namespace mk
 
 		};
 
-		std::unique_ptr<Window> Window::create(const WindowDescription& description)
+		std::unique_ptr<Window> Window::Create(const WindowDescription& description)
 		{
 			return std::make_unique<Win32Window>(description);
 		}
@@ -58,10 +58,37 @@ namespace mk
 {
 
 	Win32Window::Win32Window(const WindowDescription& description)
+		:
+		Window(description)
 	{
 		glfwInit();
-		_window = glfwCreateWindow((int) description.size.width, (int) description.size.height, description.title.c_str(), nullptr, nullptr);
+
+		_window = glfwCreateWindow(static_cast<int>(description.size.width), 
+			                       static_cast<int>(description.size.height), 
+			                       description.title.c_str(), 
+			                       nullptr, 
+			                       nullptr);
+
 		glfwMakeContextCurrent(_window);
+		glfwSetWindowUserPointer(_window, this);
+		// VSync?
+
+		glfwSetWindowCloseCallback(_window, [](GLFWwindow* window)
+			{
+				auto data = static_cast<Window*>(glfwGetWindowUserPointer(window));
+							
+				data->closedEvent.Fire();
+			});
+
+		glfwSetWindowSizeCallback(_window, [](GLFWwindow* window, int width, int height)
+			{
+				auto data = static_cast<Window*>(glfwGetWindowUserPointer(window));
+
+				auto newSize = Extent2D{ static_cast<std::size_t>(width), static_cast<std::size_t>(height) };
+
+				data->resizedEvent.Fire(newSize);
+			});
+
 	}
 
 	Win32Window::~Win32Window()
@@ -70,7 +97,7 @@ namespace mk
 		glfwTerminate();
 	}
 
-	void Win32Window::onUpdate()
+	void Win32Window::OnUpdate()
 	{
 		glfwPollEvents();
 		glfwSwapBuffers(_window);

@@ -6,16 +6,15 @@ module;
 
 export module Mikrokosmos.UI.Window;
 
+import Mikrokosmos.Graphics.Extent2D;
+export import Mikrokosmos.Events.Event;
+export import Mikrokosmos.Events.EventDispatcher;
+export import Mikrokosmos.Events.WindowEvents;
+
 namespace mk
 {
 	export
 	{
-
-		struct Extent2D
-		{
-			std::size_t width;
-			std::size_t height;
-		};
 
 		struct WindowDescription
 		{
@@ -32,11 +31,24 @@ namespace mk
 
 			virtual ~Window() = default;
 
-			static std::unique_ptr<Window> create(const WindowDescription& description = WindowDescription{});
+			static std::unique_ptr<Window> Create(const WindowDescription& description = WindowDescription{});
 
-			virtual void onUpdate() = 0;
+			virtual void OnUpdate() = 0;
+
+			std::size_t Width()  const;
+			std::size_t Height() const;
+
+			EventDispatcher<WindowClosedEvent>  closedEvent;
+			EventDispatcher<WindowResizedEvent> resizedEvent;
+
+		protected:
+
+			Window(const WindowDescription& description);
 
 		private:
+
+			std::string _title;
+			Extent2D    _size;
 
 		};
 
@@ -45,3 +57,24 @@ namespace mk
 }
 
 module :private;
+
+namespace mk
+{
+
+	Window::Window(const WindowDescription& description)
+		:
+		_title { description.title },
+		_size  { description.size  }
+	{
+	}
+
+	std::size_t Window::Width() const
+	{
+		return _size.width;
+	}
+
+	std::size_t Window::Height() const
+	{
+		return _size.height;
+	}
+}
