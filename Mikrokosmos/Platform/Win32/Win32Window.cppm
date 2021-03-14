@@ -30,17 +30,6 @@ namespace mk
 
 			GLFWwindow* _window;
 
-			/*struct WindowData
-			{
-				std::string title;
-				unsigned int width, height;
-				bool verticalSync;
-
-				EventCallbackFn EventCallback;
-			};
-
-			WindowData _data;*/
-
 		};
 
 		std::unique_ptr<Window> Window::Create(const WindowDescription& description)
@@ -77,16 +66,21 @@ namespace mk
 			{
 				auto data = static_cast<Window*>(glfwGetWindowUserPointer(window));
 							
-				data->closedEvent.Fire();
+				WindowClosedEvent event;
+
+				data->callback(event);
 			});
 
 		glfwSetWindowSizeCallback(_window, [](GLFWwindow* window, int width, int height)
 			{
 				auto data = static_cast<Window*>(glfwGetWindowUserPointer(window));
 
-				auto newSize = Extent2D{ static_cast<std::size_t>(width), static_cast<std::size_t>(height) };
+				auto newSize = Extent2D{ static_cast<std::size_t>(width), 
+					                     static_cast<std::size_t>(height) };
 
-				data->resizedEvent.Fire(newSize);
+				WindowResizedEvent event{ newSize };
+
+				data->callback(event);
 			});
 
 	}

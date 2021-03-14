@@ -2,6 +2,7 @@ module;
 
 #include <ostream>
 #include <string>
+#include <typeinfo>
 
 //#include <Mikrokosmos/Core.h>
 
@@ -13,6 +14,8 @@ namespace mk
 	export
 	{
 
+		using EventType = const std::type_info&;
+
 		class Event
 		{
 
@@ -23,6 +26,16 @@ namespace mk
 			virtual std::string Name() const = 0;
 
 			virtual std::string ToString() const;
+
+			template <typename Other>
+			bool Is() const
+			{
+				return typeid(*this) == typeid(Other);
+			}
+
+			bool Handled() const;
+
+			void Handled(bool value);
 
 		private:
 
@@ -49,47 +62,14 @@ namespace mk
 		return Name();
 	}
 
+	bool Event::Handled() const
+	{
+		return _handled;
+	}
+
+	void Event::Handled(bool value)
+	{
+		_handled = value;
+	}
+
 }
-
-
-/*
-
-Types
-	AppTick
-	AppUpdate
-	AppRender
-	WindowClose
-	WindowResize
-	WindowFocus
-	WindowLostFocus
-	WindowMoved
-	KeyPressed
-	KeyReleased
-	KeyTyped
-	MouseButtonPressed
-	MouseButtonReleased
-	MouseMoved
-	MouseScrolled
-
-Categories
-	Application    
-	Keyboard
-	Mouse
-	
-Methods
-	int type();
-	std::string name();
-	std::string description();
-	int category();
-	bool handled();
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	*/

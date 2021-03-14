@@ -13,40 +13,43 @@ import Mikrokosmos.Events.Delegate;
 namespace mk
 {
 	export
-	{
+	{	
 
-		template <typename Event>
 		class EventDispatcher
 		{
 
 		public:
 
-			using EventCallback = Delegate<void(const Event&)>;
-
-			EventDispatcher() = default;
-
-			template<typename Object>
-			using Method = void(Object::*)(const Event&);
-
-			template<typename Object>
-			void AddListener(Object* object, Method<Object> method)
+			EventDispatcher(Event& event)
+				:
+				_event{ event }
 			{
-				EventCallback callback;
-				callback.Bind(object, method);
-				_callbacks.emplace_back(callback);
 			}
 
-			void Fire(const Event& event = Event{})
+			template<typename Object, typename EventType>
+			using Method = void(Object::*)(EventType&);
+
+			template <typename EventType, typename Object>
+			bool Dispatch(Object* object, Method<Object, EventType> method)
 			{
-				for (auto& callback : _callbacks)
+				if (_event.Is<EventType>())
 				{
-					callback(event);
+					using EventCallback = Delegate<void(EventType&)>;
+
+					EventCallback callback;
+					
+					callback.Bind(object, method);
+					
+					callback(static_cast<EventType&>(_event));
+					
+					return true;
 				}
+				return false;
 			}
 
 		private:
 			
-			std::vector<EventCallback> _callbacks;
+			Event& _event;
 
 		};
 
@@ -61,55 +64,3 @@ namespace mk
 
 
 }
-
-
-
-
-
-/*
-
-int Foo(float a, char b);                       // == int(*)(float, char)
-int Clazz::Foo(const float& a, char b);         // == int(*Clazz::)(const float&, char)
-[this](float a, char b){};                      // == ????
-
-
-#include <iostream>
-#include <functional>
-
-template <typename>
-class Delegate;
-
-template <typename R, typename... Args>
-class Delegate<R(Args...)>
- {
-   public:
-	  template<typename T>
-	  void connect (T * t, R(T::*method)(Args...) )
-	   { mFunction = [=](Args ... as){ (t->*method)(as...); }; }
-
-	  R operator() (Args... args)
-	   { return mFunction(args...); }
-
-   protected:
-	  std::function<R(Args...)> mFunction;
- };
-
-class A
- { public: Delegate<void(int)> test; };
-
-class B
- { public: void test (int a) { std::cout << a; }; };
-
-int main()
- {
-   A a;
-   B b;
-
-   a.test.connect(&b, &B::test);
-
-   a.test(42);
- }
-
-
-
-*/

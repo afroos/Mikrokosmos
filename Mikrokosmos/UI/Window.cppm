@@ -8,7 +8,7 @@ export module Mikrokosmos.UI.Window;
 
 import Mikrokosmos.Graphics.Extent2D;
 export import Mikrokosmos.Events.Event;
-export import Mikrokosmos.Events.EventDispatcher;
+export import Mikrokosmos.Events.Delegate;
 export import Mikrokosmos.Events.WindowEvents;
 
 namespace mk
@@ -29,6 +29,8 @@ namespace mk
 
 		public:
 
+			using EventCallback = Delegate<void(Event&)>;
+
 			virtual ~Window() = default;
 
 			static std::unique_ptr<Window> Create(const WindowDescription& description = WindowDescription{});
@@ -38,8 +40,7 @@ namespace mk
 			std::size_t Width()  const;
 			std::size_t Height() const;
 
-			EventDispatcher<WindowClosedEvent>  closedEvent;
-			EventDispatcher<WindowResizedEvent> resizedEvent;
+			EventCallback callback;
 
 		protected:
 
@@ -66,6 +67,7 @@ namespace mk
 		_title { description.title },
 		_size  { description.size  }
 	{
+
 	}
 
 	std::size_t Window::Width() const

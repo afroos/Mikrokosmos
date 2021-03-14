@@ -16,6 +16,8 @@ namespace mk
 		{
 			std::size_t width;
 			std::size_t height;
+
+			auto operator<=>(const Extent2D&) const = default;
 		};
 
 		std::ostream& operator<<(std::ostream& output, const Extent2D& extent2D)
@@ -31,6 +33,5 @@ module :private;
 
 namespace mk
 {
-
-	
+		
 }

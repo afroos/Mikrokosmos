@@ -6,8 +6,6 @@ module;
 
 #include <Mikrokosmos/Core.h>
 
-#include <typeindex> // Tirar.
-
 export module Mikrokosmos.Applications.Application;
 
 import Mikrokosmos.Diagnostics.Logger;
@@ -32,22 +30,17 @@ namespace mk
 
 			void Run();
 
+			void OnEvent(Event& event);
+
 		private:
 
-			void OnWindowClosed(const WindowClosedEvent& event)
-			{
-				mk::trace("{0}", event);
-				_running = false;
-			}
-
-			void OnWindowResized(const WindowResizedEvent& event)
-			{
-				mk::trace("{0}", event);
-			}
+			void OnWindowClosed  (WindowClosedEvent&  event);
+			void OnWindowResized (WindowResizedEvent& event);
 
 			std::unique_ptr<Window> _window;
 
-			bool _running { true };
+			bool _running   { true  };
+			bool _minimized { false };
 
 		};
 
@@ -62,9 +55,7 @@ namespace mk
 	Application::Application()
 	{
 		_window = Window::Create();
-		_window->closedEvent.AddListener(this, &Application::OnWindowClosed);
-		_window->resizedEvent.AddListener(this, &Application::OnWindowResized);
-
+		_window->callback.Bind(this, &Application::OnEvent);
 	}
 
 	void Application::Run()
@@ -73,10 +64,36 @@ namespace mk
 
 		while (_running)
 		{
+			if (!_minimized)
+			{
+			}
+
 			glClearColor(1, 0, 1, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 			_window->OnUpdate();
 		}
+	}
+
+	void Application::OnEvent(Event& event)
+	{
+		EventDispatcher dispatcher{ event };
+
+		dispatcher.Dispatch<WindowClosedEvent >(this, &Application::OnWindowClosed);
+		dispatcher.Dispatch<WindowResizedEvent>(this, &Application::OnWindowResized);
+
+		mk::trace("{0}", event);
+	}
+
+	void Application::OnWindowClosed(WindowClosedEvent& event)
+	{
+		_running = false;
+		event.Handled(true);
+	}
+
+	void Application::OnWindowResized(WindowResizedEvent& event)
+	{
+		_minimized = (event.NewSize() == mk::Extent2D{0, 0});
+		event.Handled(true);
 	}
 
 }

@@ -38,7 +38,7 @@ namespace mk
 
 	std::string MouseMovedEvent::Name() const
 	{
-		return "MouseMoved";
+		return "Mouse Moved";
 	}
 
 }
