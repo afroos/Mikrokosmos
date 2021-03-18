@@ -20,8 +20,9 @@ namespace mk
 		{
 			WindowDescription()  = default;
 			~WindowDescription() = default;
+			
 			std::string title = "Mikrokosmos Framework";
-			Extent2D    size = { 1280, 720 };
+			Extent2D    size  = { 1280, 720 };
 		};
 
 		class MK_API Window

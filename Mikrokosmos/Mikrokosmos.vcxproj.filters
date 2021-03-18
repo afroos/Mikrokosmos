@@ -65,5 +65,11 @@
     <ClCompile Include="Graphics\Extent2D.cppm">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Applications\LayerStack.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Applications\Layer.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

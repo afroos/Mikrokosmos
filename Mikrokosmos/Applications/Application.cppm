@@ -1,6 +1,7 @@
 module;
 
 #include <memory>
+#include <ranges>
 
 #include <GLFW/glfw3.h>
 
@@ -8,6 +9,8 @@ module;
 
 export module Mikrokosmos.Applications.Application;
 
+import Mikrokosmos.Applications.Layer;
+import Mikrokosmos.Applications.LayerStack;
 import Mikrokosmos.Diagnostics.Logger;
 import Mikrokosmos.Events;
 import Mikrokosmos.UI.Window;
@@ -32,12 +35,17 @@ namespace mk
 
 			void OnEvent(Event& event);
 
+			void PushLayer   (Layer* layer);
+			void PushOverlay (Layer* layer);
+
 		private:
+
+			std::unique_ptr<Window> _window;
 
 			void OnWindowClosed  (WindowClosedEvent&  event);
 			void OnWindowResized (WindowResizedEvent& event);
 
-			std::unique_ptr<Window> _window;
+			LayerStack _layerStack;
 
 			bool _running   { true  };
 			bool _minimized { false };
@@ -70,6 +78,12 @@ namespace mk
 
 			glClearColor(1, 0, 1, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			for (auto layer : _layerStack)
+			{
+				layer->OnUpdate(0.001f);
+			}
+
 			_window->OnUpdate();
 		}
 	}
@@ -82,6 +96,24 @@ namespace mk
 		dispatcher.Dispatch<WindowResizedEvent>(this, &Application::OnWindowResized);
 
 		mk::trace("{0}", event);
+		
+		for (auto* layer : std::ranges::reverse_view{ _layerStack })
+		{
+			//if (event.Handled()) break;
+
+			layer->OnEvent(event);
+		}
+
+	}
+
+	void Application::PushLayer(Layer* layer)
+	{
+		_layerStack.PushLayer(layer);
+	}
+
+	void Application::PushOverlay(Layer* layer)
+	{
+		_layerStack.PushOverlay(layer);
 	}
 
 	void Application::OnWindowClosed(WindowClosedEvent& event)
