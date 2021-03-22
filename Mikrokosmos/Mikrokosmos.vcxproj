@@ -71,7 +71,7 @@
       <AdditionalDependencies>opengl32.lib;glfw3.lib;Glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /y $(SolutionDir)Build\$(ProjectName)\$(Configuration)-$(Platform)\Mikrokosmos.dll  $(SolutionDir)Build\Sandbox\$(Configuration)-$(Platform)\</Command>
+      <Command>xcopy /y $(TargetPath) $(SolutionDir)Build\Sandbox\$(Configuration)-$(Platform)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
