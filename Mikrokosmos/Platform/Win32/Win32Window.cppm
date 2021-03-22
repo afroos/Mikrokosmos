@@ -2,6 +2,8 @@ module;
 
 #include <memory>
 
+#include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 
 #include <Mikrokosmos/Core.h>
@@ -59,6 +61,7 @@ namespace mk
 			                       nullptr);
 
 		glfwMakeContextCurrent(_window);
+		auto status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		glfwSetWindowUserPointer(_window, this);
 		// VSync?
 
