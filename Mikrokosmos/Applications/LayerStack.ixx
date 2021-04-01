@@ -13,7 +13,7 @@ namespace mk
 	export
 	{
 
-		class MK_API LayerStack
+		class LayerStack
 		{
 
 		public:

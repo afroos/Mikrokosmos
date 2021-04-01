@@ -25,7 +25,7 @@ namespace mk
 			Extent2D    size  = { 1280, 720 };
 		};
 
-		class MK_API Window
+		class Window
 		{
 
 		public:
@@ -38,8 +38,8 @@ namespace mk
 
 			virtual void OnUpdate() = 0;
 
-			std::size_t Width()  const;
-			std::size_t Height() const;
+			MK_API std::size_t Width()  const;
+			MK_API std::size_t Height() const;
 
 			EventCallback callback;
 

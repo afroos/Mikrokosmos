@@ -2,11 +2,11 @@ module;
 
 #include <memory>
 
-#include <glad/glad.h>
+#include <Mikrokosmos/Core.h>
 
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <Mikrokosmos/Core.h>
 
 export module Mikrokosmos.Platform.Win32.Window;
 

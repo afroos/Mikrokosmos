@@ -1,62 +1,13 @@
 module;
 
-#include <memory>
 #include <ranges>
-
+#include <Mikrokosmos/Core.h>
 #include <glad/glad.h>
 
-#include <Mikrokosmos/Core.h>
+module Mikrokosmos.Applications.Application;
 
-export module Mikrokosmos.Applications.Application;
-
-import Mikrokosmos.Applications.Layer;
-import Mikrokosmos.Applications.LayerStack;
+//import Mikrokosmos.Applications.Layer;
 import Mikrokosmos.Diagnostics.Logger;
-import Mikrokosmos.Events;
-import Mikrokosmos.UI.Window;
-
-namespace mk
-{
-	export
-	{
-
-		class MK_API Application
-		{
-
-		public:
-
-			Application();
-			virtual ~Application() = default;
-
-			Application(const Application&) = delete;
-			Application& operator=(const Application&) = delete;
-
-			void Run();
-
-			void OnEvent(Event& event);
-
-			void PushLayer   (Layer* layer);
-			void PushOverlay (Layer* layer);
-
-		private:
-
-			std::unique_ptr<Window> _window;
-
-			void OnWindowClosed  (WindowClosedEvent&  event);
-			void OnWindowResized (WindowResizedEvent& event);
-
-			LayerStack _layerStack;
-
-			bool _running   { true  };
-			bool _minimized { false };
-
-		};
-
-	}
-	
-}
-
-module : private;
 
 namespace mk
 {
@@ -64,6 +15,17 @@ namespace mk
 	{
 		_window = Window::Create();
 		_window->callback.Bind(this, &Application::OnEvent);
+	}
+
+
+	Application::~Application()
+	{
+
+	}
+
+	Window& Application::Window() const
+	{
+		return *_window;
 	}
 
 	void Application::Run()
@@ -81,7 +43,7 @@ namespace mk
 
 			for (auto layer : _layerStack)
 			{
-				layer->OnUpdate(0.001f);
+				layer->OnUpdate();
 			}
 
 			_window->OnUpdate();
@@ -109,11 +71,14 @@ namespace mk
 	void Application::PushLayer(Layer* layer)
 	{
 		_layerStack.PushLayer(layer);
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* layer)
 	{
 		_layerStack.PushOverlay(layer);
+		layer->OnAttach();
+
 	}
 
 	void Application::OnWindowClosed(WindowClosedEvent& event)

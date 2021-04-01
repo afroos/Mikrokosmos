@@ -7,10 +7,14 @@ class ExampleLayer : public mk::Layer
 
 public:
 
-	         ExampleLayer() = default;
+	ExampleLayer(mk::Application& application)
+		: mk::Layer{ application }
+	{
+	}
+
 	virtual ~ExampleLayer() = default;
 
-	void OnUpdate(float timeStep) override
+	void OnUpdate() override
 	{
 		mk::info("ExampleLayer::Update");
 	}
@@ -32,7 +36,8 @@ public:
 
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer);
+		PushLayer(new ExampleLayer(*this));
+		PushOverlay(new mk::DebugLayer(*this));
 	}
 
 	~Sandbox() = default;
