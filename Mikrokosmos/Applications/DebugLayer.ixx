@@ -9,7 +9,7 @@ export module Mikrokosmos.Applications.DebugLayer;
 
 import Mikrokosmos.Applications.Application;
 import Mikrokosmos.Applications.Layer;
-import Mikrokosmos.Events.Event;
+import Mikrokosmos.Events;
 
 namespace mk
 {
@@ -29,6 +29,17 @@ namespace mk
 
 			void OnUpdate();
 			void OnEvent(Event& event);
+
+		private:
+
+			/*void OnMouseButtonPressedEvent  (MouseButtonPressedEvent&  event);
+			void OnMouseButtonReleasedEvent (MouseButtonReleasedEvent& event);
+			void OnMouseMovedEvent          (MouseMovedEvent&          event);
+			void OnMouseScrolledEvent       (MouseScrolledEvent&       event);
+			void OnKeyPressedEvent          (KeyPressedEvent&          event);
+			void OnKeyReleasedEvent         (KeyReleasedEvent&         event);
+			void OnKeyTypedEvent            (KeyTypedEvent&            event);
+			void OnWindowResizedEvent       (WindowResizedEvent&       event);*/
 
 		private:
 
