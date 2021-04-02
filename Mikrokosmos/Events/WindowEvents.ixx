@@ -7,8 +7,8 @@ module;
 
 export module Mikrokosmos.Events.WindowEvents;
 
-import Mikrokosmos.Graphics.Extent2D;
 import Mikrokosmos.Events.Event;
+import Mikrokosmos.Mathematics.Algebra.Vector;
 
 namespace mk
 {
@@ -35,17 +35,16 @@ namespace mk
 
 		public:
 
-			WindowResizedEvent(Extent2D newSize);
+			WindowResizedEvent(const Vector2u& newSize);
 
-			std::string Name() const override;
-
+			std::string Name()     const override;
 			std::string ToString() const override;
 
-			Extent2D NewSize() const;
+			Vector2u NewSize() const;
 
 		private:
 
-			Extent2D _newSize;
+			Vector2u _newSize;
 
 		};
 
@@ -63,7 +62,7 @@ namespace mk
 		return "Window Closed";
 	}
 
-	WindowResizedEvent::WindowResizedEvent(Extent2D newSize)
+	WindowResizedEvent::WindowResizedEvent(const Vector2u& newSize)
 		: _newSize{ newSize }
 	{
 	}
@@ -80,7 +79,7 @@ namespace mk
 		return stream.str();
 	}
 
-	Extent2D WindowResizedEvent::NewSize() const
+	Vector2u WindowResizedEvent::NewSize() const
 	{
 		return _newSize;
 	}

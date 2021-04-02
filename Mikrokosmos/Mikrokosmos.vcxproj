@@ -121,6 +121,14 @@
     <ClCompile Include="Events\MouseEvents.ixx" />
     <ClCompile Include="Events\WindowEvents.ixx" />
     <ClCompile Include="Graphics\Extent2D.ixx" />
+    <ClCompile Include="Input\Input.ixx" />
+    <ClCompile Include="Input\Keyboard.ixx" />
+    <ClCompile Include="Input\Mouse.ixx" />
+    <ClCompile Include="Mathematics\Algebra\Algebra.ixx" />
+    <ClCompile Include="Mathematics\Algebra\Vector.ixx" />
+    <ClCompile Include="Mathematics\Geometry\Geometry.ixx" />
+    <ClCompile Include="Mathematics\Geometry\Point.ixx" />
+    <ClCompile Include="Mathematics\Mathematics.ixx" />
     <ClCompile Include="Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
     <ClCompile Include="Platform\Win32\Win32Window.ixx" />
     <ClCompile Include="UI\UI.ixx" />

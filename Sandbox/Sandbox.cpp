@@ -16,12 +16,12 @@ public:
 
 	void OnUpdate() override
 	{
-		mk::info("ExampleLayer::Update");
+		//mk::info("ExampleLayer::Update");
 	}
 	
 	void OnEvent(mk::Event& event) override
 	{
-		mk::trace("ExampleLayer::OnEvent");
+		//mk::trace("ExampleLayer::OnEvent");
 	}
 
 private:

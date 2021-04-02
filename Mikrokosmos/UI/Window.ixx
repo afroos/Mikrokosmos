@@ -6,10 +6,9 @@ module;
 
 export module Mikrokosmos.UI.Window;
 
-import Mikrokosmos.Graphics.Extent2D;
+import Mikrokosmos.Mathematics.Algebra.Vector;
 export import Mikrokosmos.Events.Event;
 export import Mikrokosmos.Events.Delegate;
-export import Mikrokosmos.Events.WindowEvents;
 
 namespace mk
 {
@@ -22,7 +21,7 @@ namespace mk
 			~WindowDescription() = default;
 			
 			std::string title = "Mikrokosmos Framework";
-			Extent2D    size  = { 1280, 720 };
+			Vector2u    size  = { 1280, 720 };
 		};
 
 		class Window
@@ -38,6 +37,7 @@ namespace mk
 
 			virtual void OnUpdate() = 0;
 
+			MK_API Vector2u    Size()   const;
 			MK_API std::size_t Width()  const;
 			MK_API std::size_t Height() const;
 
@@ -50,7 +50,7 @@ namespace mk
 		private:
 
 			std::string _title;
-			Extent2D    _size;
+			Vector2u    _size;
 
 		};
 
@@ -71,13 +71,18 @@ namespace mk
 
 	}
 
+	Vector2u Window::Size() const
+	{
+		return _size;
+	}
+
 	std::size_t Window::Width() const
 	{
-		return _size.width;
+		return _size.X();
 	}
 
 	std::size_t Window::Height() const
 	{
-		return _size.height;
+		return _size.Y();
 	}
 }

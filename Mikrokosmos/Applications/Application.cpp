@@ -54,8 +54,8 @@ namespace mk
 	{
 		EventDispatcher dispatcher{ event };
 
-		dispatcher.Dispatch<WindowClosedEvent >(this, &Application::OnWindowClosed);
-		dispatcher.Dispatch<WindowResizedEvent>(this, &Application::OnWindowResized);
+		dispatcher.Dispatch<WindowClosedEvent >(this, &Application::OnWindowClosedEvent);
+		dispatcher.Dispatch<WindowResizedEvent>(this, &Application::OnWindowResizedEvent);
 
 		mk::trace("{0}", event);
 		
@@ -81,15 +81,15 @@ namespace mk
 
 	}
 
-	void Application::OnWindowClosed(WindowClosedEvent& event)
+	void Application::OnWindowClosedEvent(WindowClosedEvent& event)
 	{
 		_running = false;
 		event.Handled(true);
 	}
 
-	void Application::OnWindowResized(WindowResizedEvent& event)
+	void Application::OnWindowResizedEvent(WindowResizedEvent& event)
 	{
-		_minimized = (event.NewSize() == mk::Extent2D{0, 0});
+		_minimized = (event.NewSize() == Vector2u::Zero());
 		event.Handled(true);
 	}
 

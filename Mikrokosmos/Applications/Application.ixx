@@ -36,8 +36,8 @@ export namespace mk
 
 		std::unique_ptr<mk::Window> _window;
 
-		void OnWindowClosed  (WindowClosedEvent&  event);
-		void OnWindowResized (WindowResizedEvent& event);
+		void OnWindowClosedEvent  (WindowClosedEvent&  event);
+		void OnWindowResizedEvent (WindowResizedEvent& event);
 
 		LayerStack _layerStack;
 

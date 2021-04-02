@@ -4,6 +4,7 @@ module;
 #include <Mikrokosmos/Platform/OpenGL/ImGuiOpenGLRenderer.h>
 
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 export module Mikrokosmos.Applications.DebugLayer;
 
@@ -32,14 +33,14 @@ namespace mk
 
 		private:
 
-			/*void OnMouseButtonPressedEvent  (MouseButtonPressedEvent&  event);
+			void OnMouseButtonPressedEvent  (MouseButtonPressedEvent&  event);
 			void OnMouseButtonReleasedEvent (MouseButtonReleasedEvent& event);
 			void OnMouseMovedEvent          (MouseMovedEvent&          event);
 			void OnMouseScrolledEvent       (MouseScrolledEvent&       event);
-			void OnKeyPressedEvent          (KeyPressedEvent&          event);
+			/*void OnKeyPressedEvent          (KeyPressedEvent&          event);
 			void OnKeyReleasedEvent         (KeyReleasedEvent&         event);
-			void OnKeyTypedEvent            (KeyTypedEvent&            event);
-			void OnWindowResizedEvent       (WindowResizedEvent&       event);*/
+			void OnKeyTypedEvent            (KeyTypedEvent&            event);*/
+			void OnWindowResizedEvent       (WindowResizedEvent&       event);
 
 		private:
 
@@ -53,6 +54,18 @@ module : private;
 
 namespace mk
 {
+
+	constexpr int MapButton(Mouse::Button button)
+	{
+		switch (button)
+		{
+			case Mouse::Button::Left:   return  0;
+			case Mouse::Button::Right:  return  1;
+			case Mouse::Button::Middle: return  2;
+
+			default:                    return -1;
+		}
+	}
 
 	DebugLayer::DebugLayer(Application& application)
 		:
@@ -71,7 +84,7 @@ namespace mk
 		ImGui::CreateContext();
 		ImGui::StyleColorsDark();
 
-		ImGuiIO& io = ImGui::GetIO();
+		auto& io = ImGui::GetIO();
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
 		io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 
@@ -108,8 +121,9 @@ namespace mk
 
 	void DebugLayer::OnUpdate()
 	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.DisplaySize = ImVec2{ (float)_application.Window().Width(), (float)_application.Window().Height() };
+		auto& io = ImGui::GetIO();
+		io.DisplaySize = ImVec2{ static_cast<float>(_application.Window().Width()), 
+			                     static_cast<float>(_application.Window().Height()) };
 
 		auto time = (float)glfwGetTime();
 		io.DeltaTime = 1.0f / 60.0f;
@@ -127,6 +141,46 @@ namespace mk
 
 	void DebugLayer::OnEvent(Event& event)
 	{
+		EventDispatcher dispatcher{ event };
 
+		dispatcher.Dispatch<MouseButtonPressedEvent >(this, &DebugLayer::OnMouseButtonPressedEvent );
+		dispatcher.Dispatch<MouseButtonReleasedEvent>(this, &DebugLayer::OnMouseButtonReleasedEvent);
+		dispatcher.Dispatch<MouseMovedEvent         >(this, &DebugLayer::OnMouseMovedEvent         );
+		dispatcher.Dispatch<MouseScrolledEvent      >(this, &DebugLayer::OnMouseScrolledEvent      );
+	}
+
+	void DebugLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent& event)
+	{
+		auto& io = ImGui::GetIO();
+		io.MouseDown[MapButton(event.Button())] = true;
+	}
+
+	void DebugLayer::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& event)
+	{
+		auto& io = ImGui::GetIO();
+		io.MouseDown[MapButton(event.Button())] = false;
+	}
+
+	void DebugLayer::OnMouseMovedEvent(MouseMovedEvent& event)
+	{
+		auto& io = ImGui::GetIO();
+		io.MousePos = ImVec2{ static_cast<float>(event.NewPosition().X()), 
+							  static_cast<float>(event.NewPosition().Y())};
+	}
+
+	void DebugLayer::OnMouseScrolledEvent(MouseScrolledEvent& event)
+	{
+		auto& io = ImGui::GetIO();
+		io.MouseWheelH += static_cast<float>(event.Offset().X());
+		io.MouseWheel  += static_cast<float>(event.Offset().Y());
+	}
+
+	void DebugLayer::OnWindowResizedEvent(WindowResizedEvent& event)
+	{
+		auto& io = ImGui::GetIO();
+		io.DisplaySize = ImVec2{ static_cast<float>(event.NewSize().X()),
+							     static_cast<float>(event.NewSize().Y()) };
+		io.DisplayFramebufferScale = ImVec2{ 1.0f, 1.0f };
+		glViewport(0, 0, event.NewSize().X(), event.NewSize().Y());
 	}
 }
