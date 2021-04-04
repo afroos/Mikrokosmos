@@ -116,5 +116,8 @@
     <ClCompile Include="Mathematics\Algebra\Vector.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Events\KeyEvents.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

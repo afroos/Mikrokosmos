@@ -21,6 +21,8 @@ export namespace mk
 
 	public:
 
+		MouseButtonEvent() = delete;
+
 		Mouse::Button Button() const;
 
 	protected:
@@ -38,6 +40,8 @@ export namespace mk
 
 	public:
 
+		MouseButtonPressedEvent() = delete;
+
 		MouseButtonPressedEvent(const Mouse::Button button);
 
 		std::string Name()     const override;
@@ -54,6 +58,8 @@ export namespace mk
 
 	public:
 
+		MouseButtonReleasedEvent() = delete;
+
 		MouseButtonReleasedEvent(const Mouse::Button button);
 
 		std::string Name()     const override;
@@ -68,7 +74,9 @@ export namespace mk
 
 	public:
 
-		MouseMovedEvent(const Point2i newPosition);
+		MouseMovedEvent() = delete;
+
+		MouseMovedEvent(const Point2i& newPosition);
 
 		std::string Name()     const override;
 		std::string ToString() const override;
@@ -86,7 +94,9 @@ export namespace mk
 
 	public:
 
-		MouseScrolledEvent(Vector2i offset);
+		MouseScrolledEvent() = delete;
+
+		MouseScrolledEvent(const Vector2i& offset);
 
 		std::string Name()     const override;
 		std::string ToString() const override;
@@ -150,7 +160,7 @@ namespace mk
 		return stream.str();
 	}
 
-	MouseMovedEvent::MouseMovedEvent(const Point2i newPosition)
+	MouseMovedEvent::MouseMovedEvent(const Point2i& newPosition)
 		: _newPosition{ newPosition }
 	{
 	}
@@ -172,7 +182,7 @@ namespace mk
 		return _newPosition;
 	}
 
-	MouseScrolledEvent::MouseScrolledEvent(Vector2i offset)
+	MouseScrolledEvent::MouseScrolledEvent(const Vector2i& offset)
 		: _offset{ offset }
 	{
 	}

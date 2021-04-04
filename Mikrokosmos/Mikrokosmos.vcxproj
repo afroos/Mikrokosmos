@@ -118,6 +118,7 @@
     <ClCompile Include="Events\Event.ixx" />
     <ClCompile Include="Events\EventDispatcher.ixx" />
     <ClCompile Include="Events\Events.ixx" />
+    <ClCompile Include="Events\KeyEvents.ixx" />
     <ClCompile Include="Events\MouseEvents.ixx" />
     <ClCompile Include="Events\WindowEvents.ixx" />
     <ClCompile Include="Graphics\Extent2D.ixx" />
