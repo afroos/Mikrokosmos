@@ -4,29 +4,31 @@ module;
 
 export module Mikrokosmos.Applications.Layer;
 
+import Mikrokosmos.Events.Event;
+
 export namespace mk
 {
-
-	class Application;
-	class Event;
 
 	class MK_API Layer
 	{
 
 	public:
 
-		Layer(Application& application);
-		~Layer();
+		Layer() = default;
+		virtual ~Layer() = default;
 
-		virtual void OnAttach();
-		virtual void OnDetach();
-		virtual void OnUpdate();
-		virtual void OnEvent(Event& event);
-
-	protected:
-
-		Application& _application;
+		virtual void OnAttach()            {}
+		virtual void OnDetach()            {}
+		virtual void OnUpdate()            {}
+		virtual void OnEvent(Event& event) {}
 
 	};
+
+}
+
+module :private;
+
+namespace mk
+{
 
 }

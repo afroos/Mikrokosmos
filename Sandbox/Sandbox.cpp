@@ -7,8 +7,8 @@ class ExampleLayer : public mk::Layer
 
 public:
 
-	ExampleLayer(mk::Application& application)
-		: mk::Layer{ application }
+	ExampleLayer()
+		: mk::Layer()
 	{
 	}
 
@@ -36,8 +36,8 @@ public:
 
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer(*this));
-		PushOverlay(new mk::DebugLayer(*this));
+		PushLayer(new ExampleLayer());
+		PushOverlay(new mk::DebugLayer());
 	}
 
 	~Sandbox() = default;
@@ -56,7 +56,7 @@ int main()
 	}
 	catch (const std::exception& exception)
 	{
-		mk::error(exception.what());
+		mk::Error(exception.what());
 		return EXIT_FAILURE;
 	}
 

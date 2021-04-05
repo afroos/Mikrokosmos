@@ -1,10 +1,6 @@
 module;
 
 #include <memory>
-
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-
 #include <Mikrokosmos/Core.h>
 
 export module Mikrokosmos.Diagnostics.Logger;
@@ -18,28 +14,28 @@ namespace mk
 
 		public:
 
-			MK_API static Logger& get()
+			MK_API static Logger& Get()
 			{
 				static Logger logger;
 				return logger;
 			}
 
-			Logger(const Logger&) = delete;
-			Logger(Logger&&) = delete;
+			Logger(const Logger&)            = delete;
+			Logger(Logger&&)                 = delete;
 			Logger& operator=(const Logger&) = delete;
-			Logger& operator=(Logger&&) = delete;
+			Logger& operator=(Logger&&)      = delete;
 
 			template<typename StringFormat, typename... Arguments>
-			void trace(const StringFormat& format, Arguments&&... arguments);
+			void Trace(const StringFormat& format, Arguments&&... arguments);
 
 			template<typename StringFormat, typename... Arguments>
-			void info(const StringFormat& format, Arguments&&... arguments);
+			void Info(const StringFormat& format, Arguments&&... arguments);
 
 			template<typename StringFormat, typename... Arguments>
-			void warning(const StringFormat& format, Arguments&&... arguments);
+			void Warning(const StringFormat& format, Arguments&&... arguments);
 
 			template<typename StringFormat, typename... Arguments>
-			void error(const StringFormat& format, Arguments&&... arguments);
+			void Error(const StringFormat& format, Arguments&&... arguments);
 
 		private:
 
@@ -53,64 +49,64 @@ namespace mk
 		};
 
 		template<typename StringFormat, typename... Arguments>
-		MK_API void trace(const StringFormat& format, Arguments&&... arguments)
+		MK_API void Trace(const StringFormat& format, Arguments&&... arguments)
 		{
-			Logger::get().trace(format, arguments...);
+			Logger::Get().Trace(format, arguments...);
 		}
 
 		template<typename StringFormat, typename... Arguments>
-		MK_API void info(const StringFormat& format, Arguments&&... arguments)
+		MK_API void Info(const StringFormat& format, Arguments&&... arguments)
 		{
-			Logger::get().info(format, arguments...);
+			Logger::Get().Info(format, arguments...);
 		}
 
 		template<typename StringFormat, typename... Arguments>
-		MK_API void warning(const StringFormat& format, Arguments&&... arguments)
+		MK_API void Warning(const StringFormat& format, Arguments&&... arguments)
 		{
-			Logger::get().warning(format, arguments...);
+			Logger::Get().Warning(format, arguments...);
 		}
 
 		template<typename StringFormat, typename... Arguments>
-		MK_API void error(const StringFormat& format, Arguments&&... arguments)
+		MK_API void Error(const StringFormat& format, Arguments&&... arguments)
 		{
-			Logger::get().error(format, arguments...);
+			Logger::Get().Error(format, arguments...);
 		}
 
 	}
 
 	template<typename StringFormat, typename... Arguments>
-	void Logger::trace(const StringFormat& format, Arguments&&... arguments) 
+	void Logger::Trace(const StringFormat& format, Arguments&&... arguments) 
 	{
 		_logger->trace(format, arguments...); 
 	}
 
 	template<typename StringFormat, typename... Arguments>
-	void Logger::info(const StringFormat& format, Arguments&&... arguments) 
+	void Logger::Info(const StringFormat& format, Arguments&&... arguments) 
 	{ 
 		_logger->info(format, arguments...); 
 	}
 
 	template<typename StringFormat, typename... Arguments>
-	void Logger::warning(const StringFormat& format, Arguments&&... arguments) 
+	void Logger::Warning(const StringFormat& format, Arguments&&... arguments) 
 	{ 
 		_logger->warn(format, arguments...); 
 	}
 
 	template<typename StringFormat, typename... Arguments>
-	void Logger::error(const StringFormat& format, Arguments&&... arguments) 
+	void Logger::Error(const StringFormat& format, Arguments&&... arguments) 
 	{ 
 		_logger->error(format, arguments...); 
 	}
 
 	void dummy() // Just to instantiate the template for export.
 	{
-		Logger::get().trace("");
-		mk::trace("");
+		Logger::Get().Trace("");
+		mk::Trace("");
 	}
 
 }
 
-module : private;
+module :private;
 
 namespace mk
 {

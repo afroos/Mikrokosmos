@@ -9,5 +9,3 @@
 		#define MK_API __declspec(dllexport)
 	#endif
 #endif
-
-//#define MK_BIND_EVENT_CALLBACK(function) [this](auto&&... args) -> decltype(auto) { return this->function(std::forward<decltype(args)>(args)...); }

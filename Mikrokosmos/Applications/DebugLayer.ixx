@@ -22,7 +22,7 @@ namespace mk
 
 		public:
 
-			 DebugLayer(Application& application);
+			 DebugLayer();
 			~DebugLayer();
 
 			void OnAttach();
@@ -172,9 +172,8 @@ namespace mk
 		}
 	}
 
-	DebugLayer::DebugLayer(Application& application)
-		:
-		Layer{ application }
+	DebugLayer::DebugLayer()
+		: Layer()
 	{
 
 	}
@@ -227,8 +226,8 @@ namespace mk
 	void DebugLayer::OnUpdate()
 	{
 		auto& io = ImGui::GetIO();
-		io.DisplaySize = ImVec2{ static_cast<float>(_application.Window().Width()), 
-			                                                                                                                                                                                                                   static_cast<float>(_application.Window().Height()) };
+		io.DisplaySize = ImVec2{ static_cast<float>(Application::Get().Window().Width()), 
+		                         static_cast<float>(Application::Get().Window().Height()) };
 
 		auto time = (float)glfwGetTime();
 		io.DeltaTime = 1.0f / 60.0f;

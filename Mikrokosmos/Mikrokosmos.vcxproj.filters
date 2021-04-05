@@ -71,12 +71,6 @@
     <ClCompile Include="Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Applications\Application.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Applications\Layer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Applications\Applications.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
