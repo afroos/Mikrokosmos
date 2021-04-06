@@ -43,6 +43,8 @@ namespace mk
 
 			EventCallback callback;
 
+			virtual void* NativeHandle() const = 0;
+
 		protected:
 
 			Window(const WindowDescription& description);

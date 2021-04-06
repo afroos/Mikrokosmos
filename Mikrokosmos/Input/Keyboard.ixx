@@ -1,12 +1,12 @@
 module;
 
-//#include <Mikrokosmos/Core.h>
+#include <Mikrokosmos/Core.h>
 
 export module Mikrokosmos.Input.Keyboard;
 
 export namespace mk
 {
-	class Keyboard
+	class MK_API Keyboard
 	{
 
 	public:
@@ -65,7 +65,7 @@ export namespace mk
 			Semicolon,
 			Comma,
 			Period,
-			Quote,
+			Apostrophe,
 			Slash,
 			Backslash,
 			Tilde,
@@ -117,16 +117,12 @@ export namespace mk
 			Pause
 		};
 
-	private:
-
+		static bool IsKeyPressed(Key key);
 
 	};
+
+	constexpr Keyboard::Key ToMikrokosmosKey(int platformKey);
 	
-}
-
-module :private;
-
-namespace mk
-{
-
+	constexpr int ToPlatformKey(Keyboard::Key key);
+	
 }

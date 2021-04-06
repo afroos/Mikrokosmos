@@ -223,4 +223,6 @@ export namespace mk
 		return out;
 	}
 
+	//Vector2f dummy;
+
 }

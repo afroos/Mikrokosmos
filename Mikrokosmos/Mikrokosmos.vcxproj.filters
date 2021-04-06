@@ -18,7 +18,7 @@
     <ClInclude Include="Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Platform\OpenGL\ImGuiOpenGLRenderer.h">
+    <ClInclude Include="Graphics\OpenGL\ImGuiOpenGLRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClCompile Include="UI\Window.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Platform\Win32\Win32Window.ixx">
+    <ClCompile Include="UI\Win32\Win32Window.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="UI\UI.ixx">
@@ -68,7 +68,7 @@
     <ClCompile Include="Applications\DebugLayer.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
+    <ClCompile Include="Graphics\OpenGL\ImGuiOpenGLRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Applications\Applications.ixx">
@@ -111,6 +111,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Events\KeyEvents.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Win32\Win32Keyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Win32\Win32Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -148,7 +148,8 @@ namespace mk
 
 	void Application::OnWindowResizedEvent(WindowResizedEvent& event)
 	{
-		_minimized = (event.NewSize() == Vector2u::Zero());
+		//_minimized = (event.NewSize() == Vector2u::Zero());
+		_minimized = true;
 		event.Handled(true);
 	}
 

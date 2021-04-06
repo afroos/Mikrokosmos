@@ -59,7 +59,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MK_PLATFORM_WINDOWS;MK_BUILD_DLL;GLFW_INCLUDE_NONE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MK_PLATFORM_WIN32;MK_BUILD_DLL;GLFW_INCLUDE_NONE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)External\spdlog\include;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Glad\include;$(SolutionDir)External\ImGui;</AdditionalIncludeDirectories>
@@ -82,7 +82,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MK_PLATFORM_WINDOWS;MK_BUILD_DLL;GLFW_INCLUDE_NONE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MK_PLATFORM_WIN32;MK_BUILD_DLL;GLFW_INCLUDE_NONE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)External\spdlog\include;$(SolutionDir)External\GLFW\include;$(SolutionDir)External\Glad\include;$(SolutionDir)External\ImGui;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -103,7 +103,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
-    <ClInclude Include="Platform\OpenGL\ImGuiOpenGLRenderer.h" />
+    <ClInclude Include="Graphics\OpenGL\ImGuiOpenGLRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Applications\Application.ixx" />
@@ -123,13 +123,15 @@
     <ClCompile Include="Input\Input.ixx" />
     <ClCompile Include="Input\Keyboard.ixx" />
     <ClCompile Include="Input\Mouse.ixx" />
+    <ClCompile Include="Input\Win32\Win32Keyboard.cpp" />
+    <ClCompile Include="Input\Win32\Win32Mouse.cpp" />
     <ClCompile Include="Mathematics\Algebra\Algebra.ixx" />
     <ClCompile Include="Mathematics\Algebra\Vector.ixx" />
     <ClCompile Include="Mathematics\Geometry\Geometry.ixx" />
     <ClCompile Include="Mathematics\Geometry\Point.ixx" />
     <ClCompile Include="Mathematics\Mathematics.ixx" />
-    <ClCompile Include="Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
-    <ClCompile Include="Platform\Win32\Win32Window.ixx" />
+    <ClCompile Include="Graphics\OpenGL\ImGuiOpenGLRenderer.cpp" />
+    <ClCompile Include="UI\Win32\Win32Window.ixx" />
     <ClCompile Include="UI\UI.ixx" />
     <ClCompile Include="UI\Window.ixx" />
     <ClCompile Include="Diagnostics\Diagnostics.ixx" />

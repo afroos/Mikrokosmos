@@ -1,15 +1,17 @@
 module;
 
-//#include <Mikrokosmos/Core.h>
+#include <Mikrokosmos/Core.h>
 
 export module Mikrokosmos.Input.Mouse;
+
+import Mikrokosmos.Mathematics.Algebra.Vector;
 
 namespace mk
 {
 	export
 	{
 
-		class Mouse
+		class MK_API Mouse
 		{
 
 		public:
@@ -24,18 +26,16 @@ namespace mk
 				XButton2
 			};
 
-		private:
-
+			static bool IsButtonPressed(Button button);
+			
+			static Vector2i Position();
 
 		};
 
+		constexpr Mouse::Button ToMikrokosmosButton(int platformButton);
+
+		constexpr int ToPlatformButton(Mouse::Button button);
+
 	}
-
-}
-
-module :private;
-
-namespace mk
-{
 
 }

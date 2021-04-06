@@ -51,7 +51,7 @@ export namespace mk
 
 		constexpr Vector<Dimension, Scalar> Coordinates() const { return _coordinates; }
 
-		auto operator<=>(const Point&) const = default;
+		//auto operator<=>(const Point&) const = default;
 
 	private:
 

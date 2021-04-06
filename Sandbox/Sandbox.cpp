@@ -1,6 +1,6 @@
-import Mikrokosmos;
-
 #include <Mikrokosmos/Core.h>
+
+import Mikrokosmos;
 
 class ExampleLayer : public mk::Layer
 {
@@ -16,6 +16,11 @@ public:
 
 	void OnUpdate() override
 	{
+		if (mk::Keyboard::IsKeyPressed(mk::Keyboard::Key::A)) mk::Trace("Key A!");
+		if (mk::Keyboard::IsKeyPressed(mk::Keyboard::Key::B)) mk::Trace("Mouse position: {}", mk::Mouse::Position());
+		if (mk::Mouse::IsButtonPressed(mk::Mouse::Button::Left)) mk::Trace("Left button!");
+		if (mk::Mouse::IsButtonPressed(mk::Mouse::Button::Right)) mk::Trace("Right button!");
+
 		//mk::info("ExampleLayer::Update");
 	}
 	
