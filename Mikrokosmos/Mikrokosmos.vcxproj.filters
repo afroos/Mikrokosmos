@@ -18,9 +18,6 @@
     <ClInclude Include="Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\OpenGL\ImGuiOpenGLRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mikrokosmos.ixx">
@@ -66,9 +63,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Applications\DebugLayer.ixx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\OpenGL\ImGuiOpenGLRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Applications\Applications.ixx">
@@ -117,6 +111,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Input\Win32\Win32Mouse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\ImGui\ImGuiBuild.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Applications\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Applications\DebugLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -21,6 +21,7 @@ export namespace mk
 		virtual void OnDetach()            {}
 		virtual void OnUpdate()            {}
 		virtual void OnEvent(Event& event) {}
+		virtual void OnRender()            {}
 
 	};
 

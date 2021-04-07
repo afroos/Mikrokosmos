@@ -103,11 +103,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
-    <ClInclude Include="Graphics\OpenGL\ImGuiOpenGLRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Applications\Application.cpp" />
     <ClCompile Include="Applications\Application.ixx" />
     <ClCompile Include="Applications\Applications.ixx" />
+    <ClCompile Include="Applications\DebugLayer.cpp" />
     <ClCompile Include="Applications\DebugLayer.ixx" />
     <ClCompile Include="Applications\Layer.ixx" />
     <ClCompile Include="Applications\LayerStack.ixx" />
@@ -130,7 +131,7 @@
     <ClCompile Include="Mathematics\Geometry\Geometry.ixx" />
     <ClCompile Include="Mathematics\Geometry\Point.ixx" />
     <ClCompile Include="Mathematics\Mathematics.ixx" />
-    <ClCompile Include="Graphics\OpenGL\ImGuiOpenGLRenderer.cpp" />
+    <ClCompile Include="UI\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="UI\Win32\Win32Window.ixx" />
     <ClCompile Include="UI\UI.ixx" />
     <ClCompile Include="UI\Window.ixx" />

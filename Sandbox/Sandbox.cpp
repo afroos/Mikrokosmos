@@ -42,7 +42,6 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new mk::DebugLayer());
 	}
 
 	~Sandbox() = default;
