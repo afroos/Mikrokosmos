@@ -1,12 +1,10 @@
 module;
 
-#include <Mikrokosmos/Core.h>
-
 export module Mikrokosmos.Input.Keyboard;
 
 export namespace mk
 {
-	class MK_API Keyboard
+	class  Keyboard
 	{
 
 	public:

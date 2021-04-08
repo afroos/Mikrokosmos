@@ -1,7 +1,5 @@
 module;
 
-#include <Mikrokosmos/Core.h>
-
 export module Mikrokosmos.Input.Mouse;
 
 import Mikrokosmos.Mathematics.Algebra.Vector;
@@ -11,7 +9,7 @@ namespace mk
 	export
 	{
 
-		class MK_API Mouse
+		class  Mouse
 		{
 
 		public:

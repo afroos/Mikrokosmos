@@ -1,8 +1,7 @@
 module;
 
 #include <memory>
-
-#include <Mikrokosmos/Core.h>
+#include <string>
 
 export module Mikrokosmos.UI.Window;
 
@@ -37,9 +36,9 @@ namespace mk
 
 			virtual void OnUpdate() = 0;
 
-			MK_API Vector2u    Size()   const;
-			MK_API std::size_t Width()  const;
-			MK_API std::size_t Height() const;
+			 Vector2u    Size()   const;
+			 std::size_t Width()  const;
+			 std::size_t Height() const;
 
 			EventCallback callback;
 

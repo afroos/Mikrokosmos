@@ -56,9 +56,6 @@
     <ClCompile Include="Events\Delegate.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Extent2D.ixx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Applications\LayerStack.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>

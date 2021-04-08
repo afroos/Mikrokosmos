@@ -101,10 +101,10 @@ export namespace mk
 			return *this;
 		}
 
-		auto operator<=>(const Vector&) const = default;
-
 	private:
+
 		std::array<Scalar, Dimension> _coordinates{ };
+
 	};
 
 	using Vector2  = Vector<2, double      >;
@@ -161,6 +161,22 @@ export namespace mk
 		Vector<Dimension, Scalar> result{ vector };
 		result /= scalar;
 		return result;
+	}
+
+	template <std::size_t Dimension, typename Scalar>
+	constexpr Vector<Dimension, Scalar> operator==(const Vector<Dimension, Scalar>& vector1, const Vector<Dimension, Scalar>& vector2) noexcept
+	{
+		for (Index i = 0; i < vector1.Size(); ++i)
+		{
+			if (vector1[i] != vector2[i]) return false;
+		}
+		return true;
+	}
+
+	template <std::size_t Dimension, typename Scalar>
+	constexpr Vector<Dimension, Scalar> operator!=(const Vector<Dimension, Scalar>& vector1, const Vector<Dimension, Scalar>& vector2) noexcept
+	{
+		return !(vector1 == vector2);
 	}
 
 	template <std::size_t Dimension, typename Scalar>
@@ -223,6 +239,6 @@ export namespace mk
 		return out;
 	}
 
-	//Vector2f dummy;
+	Vector2u dummy;
 
 }

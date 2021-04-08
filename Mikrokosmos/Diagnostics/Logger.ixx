@@ -14,7 +14,7 @@ namespace mk
 
 		public:
 
-			MK_API static Logger& Get()
+			static Logger& Get()
 			{
 				static Logger logger;
 				return logger;
@@ -49,25 +49,25 @@ namespace mk
 		};
 
 		template<typename StringFormat, typename... Arguments>
-		MK_API void Trace(const StringFormat& format, Arguments&&... arguments)
+		void Trace(const StringFormat& format, Arguments&&... arguments)
 		{
 			Logger::Get().Trace(format, arguments...);
 		}
 
 		template<typename StringFormat, typename... Arguments>
-		MK_API void Info(const StringFormat& format, Arguments&&... arguments)
+		void Info(const StringFormat& format, Arguments&&... arguments)
 		{
 			Logger::Get().Info(format, arguments...);
 		}
 
 		template<typename StringFormat, typename... Arguments>
-		MK_API void Warning(const StringFormat& format, Arguments&&... arguments)
+		void Warning(const StringFormat& format, Arguments&&... arguments)
 		{
 			Logger::Get().Warning(format, arguments...);
 		}
 
 		template<typename StringFormat, typename... Arguments>
-		MK_API void Error(const StringFormat& format, Arguments&&... arguments)
+		void Error(const StringFormat& format, Arguments&&... arguments)
 		{
 			Logger::Get().Error(format, arguments...);
 		}

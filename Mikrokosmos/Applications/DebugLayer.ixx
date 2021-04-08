@@ -1,7 +1,5 @@
 module;
 
-#include <Mikrokosmos/Core.h>
-
 export module Mikrokosmos.Applications.DebugLayer;
 
 import Mikrokosmos.Applications.Layer;
@@ -12,7 +10,7 @@ namespace mk
 	export
 	{
 
-		class MK_API DebugLayer : public Layer
+		class  DebugLayer : public Layer
 		{
 
 		public:
@@ -22,7 +20,6 @@ namespace mk
 
 			void OnAttach() override;
 			void OnDetach() override;
-			//void OnEvent(Event& e) override;
 			void OnRender() override;
 
 			void Begin();

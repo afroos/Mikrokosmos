@@ -1,7 +1,3 @@
-module;
-
-//#include <Mikrokosmos/Core.h>
-
 export module Mikrokosmos.Events;
 
 export import Mikrokosmos.Events.Delegate;

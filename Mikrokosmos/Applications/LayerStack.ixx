@@ -2,8 +2,6 @@ module;
 
 #include <vector>
 
-#include <Mikrokosmos/Core.h>
-
 export module Mikrokosmos.Applications.LayerStack;
 
 import Mikrokosmos.Applications.Layer;

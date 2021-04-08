@@ -3,8 +3,6 @@ module;
 #include <sstream>
 #include <string>
 
-//#include <Mikrokosmos/Core.h>
-
 export module Mikrokosmos.Events.WindowEvents;
 
 import Mikrokosmos.Events.Event;

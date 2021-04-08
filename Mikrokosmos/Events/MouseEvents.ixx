@@ -4,8 +4,6 @@ module;
 #include <string>
 #include <type_traits>
 
-//#include <Mikrokosmos/Core.h>
-
 export module Mikrokosmos.Events.MouseEvents;
 
 import Mikrokosmos.Events.Event;

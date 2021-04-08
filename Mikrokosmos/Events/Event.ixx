@@ -4,8 +4,6 @@ module;
 #include <string>
 #include <typeinfo>
 
-//#include <Mikrokosmos/Core.h>
-
 export module Mikrokosmos.Events.Event;
 
 namespace mk

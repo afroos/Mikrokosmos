@@ -1,12 +1,10 @@
 module;
 
-#include <Mikrokosmos/Core.h>
 #include <GLFW/glfw3.h> 
 
 module Mikrokosmos.Input.Keyboard;
 
 import Mikrokosmos.Applications.Application;
-import Mikrokosmos.Diagnostics.Logger;
 
 #ifdef MK_PLATFORM_WIN32
 

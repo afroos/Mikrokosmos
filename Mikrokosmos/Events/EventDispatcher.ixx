@@ -3,8 +3,6 @@ module;
 #include <functional>
 #include <vector>
 
-//#include <Mikrokosmos/Core.h>
-
 export module Mikrokosmos.Events.EventDispatcher;
 
 import Mikrokosmos.Events.Event;

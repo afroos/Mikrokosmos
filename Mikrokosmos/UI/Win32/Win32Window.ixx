@@ -1,8 +1,6 @@
 module;
+
 #include <memory>
-
-#include <Mikrokosmos/Core.h>
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 

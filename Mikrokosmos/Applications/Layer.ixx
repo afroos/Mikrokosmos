@@ -1,7 +1,5 @@
 module;
 
-#include <Mikrokosmos/Core.h>
-
 export module Mikrokosmos.Applications.Layer;
 
 import Mikrokosmos.Events.Event;
@@ -9,7 +7,7 @@ import Mikrokosmos.Events.Event;
 export namespace mk
 {
 
-	class MK_API Layer
+	class  Layer
 	{
 
 	public:

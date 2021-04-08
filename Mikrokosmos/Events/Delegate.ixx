@@ -2,8 +2,6 @@ module;
 
 #include <functional>
 
-//#include <Mikrokosmos/Core.h>
-
 export module Mikrokosmos.Events.Delegate;
 
 import Mikrokosmos.Events.Event;
