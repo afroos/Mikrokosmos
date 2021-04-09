@@ -4,7 +4,7 @@ export module Mikrokosmos.Input.Keyboard;
 
 export namespace mk
 {
-	class  Keyboard
+	class Keyboard
 	{
 
 	public:

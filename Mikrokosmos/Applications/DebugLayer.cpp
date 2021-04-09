@@ -57,7 +57,7 @@ namespace mk
 		SetDarkThemeColors();
 
 		auto& application = Application::Get();
-		auto* window = static_cast<GLFWwindow*>(application.Window().NativeHandle());
+		auto window = reinterpret_cast<GLFWwindow*>(application.Window().NativeHandle());
 
 		// Setup Platform/Renderer bindings.
 		ImGui_ImplGlfw_InitForOpenGL(window, true);

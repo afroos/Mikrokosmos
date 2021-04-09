@@ -1,10 +1,13 @@
 module;
 
+#include <memory>
+
 export module Mikrokosmos.Applications.Application;
 
 import Mikrokosmos.Applications.Layer;
 import Mikrokosmos.Applications.LayerStack;
 import Mikrokosmos.Events;
+import Mikrokosmos.Graphics;
 import Mikrokosmos.UI.Window;
 
 export namespace mk
@@ -16,28 +19,30 @@ export namespace mk
 
 	public:
 
-		 Application();
-		 virtual ~Application();
+		Application();
+		virtual ~Application();
 
 		Application(const Application&)            = delete;
 		Application(Application&&)                 = delete;
 		Application& operator=(const Application&) = delete;
 		Application& operator=(Application&&)      = delete;
 
-		 Window& Window() const;
+		Window& Window() const;
 
-		 void Run();
+		void Run();
 
-		 void OnEvent(Event& event);
+		void OnEvent(Event& event);
 
-		 void PushLayer   (Layer* layer);
-		 void PushOverlay (Layer* layer);
+		void PushLayer   (Layer* layer);
+		void PushOverlay (Layer* layer);
 
-		 static Application& Get();
+		static Application& Get();
 
 		mk::DebugLayer* DebugLayer();
 
 	private:
+
+		void InitializeGraphics();
 
 		void OnWindowClosedEvent(WindowClosedEvent& event);
 		void OnWindowResizedEvent(WindowResizedEvent& event);
@@ -54,6 +59,11 @@ export namespace mk
 
 		bool _running   { true  };
 		bool _minimized { false };
+
+		std::unique_ptr<Renderer>      _renderer;
+		std::unique_ptr<RenderDevice>  _renderDevice;
+		std::unique_ptr<DeviceContext> _deviceContext;
+		std::unique_ptr<SwapChain>     _swapChain;
 
 	};
 

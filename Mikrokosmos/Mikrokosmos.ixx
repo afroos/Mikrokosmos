@@ -5,7 +5,7 @@ export import Mikrokosmos.Applications;
 //export import Mikrokosmos.Data;
 export import Mikrokosmos.Diagnostics;
 //export import Mikrokosmos.Foundation;
-//export import Mikrokosmos.Graphics;
+export import Mikrokosmos.Graphics;
 export import Mikrokosmos.Input;
 export import Mikrokosmos.Mathematics;
 //export import Mikrokosmos.Physics;

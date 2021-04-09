@@ -12,14 +12,14 @@ namespace mk
 {
 	bool Mouse::IsButtonPressed(Button button)
 	{
-		auto* window = static_cast<GLFWwindow*>(Application::Get().Window().NativeHandle());
+		auto window = reinterpret_cast<GLFWwindow*>(Application::Get().Window().NativeHandle());
 		auto state = glfwGetMouseButton(window, ToPlatformButton(button));
         return state == GLFW_PRESS;
 	}
 
 	Vector2i Mouse::Position()
 	{
-		auto* window = static_cast<GLFWwindow*>(Application::Get().Window().NativeHandle());
+		auto window = reinterpret_cast<GLFWwindow*>(Application::Get().Window().NativeHandle());
 		double x, y;
 		glfwGetCursorPos(window, &x, &y);
 		return Vector2i{ static_cast<int>(x), static_cast<int>(y) };

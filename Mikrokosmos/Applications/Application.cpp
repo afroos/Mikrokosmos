@@ -8,6 +8,7 @@ module Mikrokosmos.Applications.Application;
 
 import Mikrokosmos.Applications.DebugLayer;
 import Mikrokosmos.Diagnostics.Logger;
+import Mikrokosmos.Graphics;
 
 namespace mk
 {
@@ -21,6 +22,8 @@ namespace mk
 
 		_debugLayer = new mk::DebugLayer();
 		PushOverlay(_debugLayer);
+
+		InitializeGraphics();
 	}
 
 
@@ -32,6 +35,20 @@ namespace mk
 	Window& Application::Window() const
 	{
 		return *_window;
+	}
+
+	void Application::InitializeGraphics()
+	{
+		_renderer      = GraphicsSystem::CreateRenderer("OpenGL");
+		
+		_renderDevice  = _renderer->CreateRenderDevice(mk::RenderDeviceDescription{});
+		
+		_deviceContext = _renderer->CreateDeviceContext(mk::DeviceContextDescription{});
+		
+		mk::SwapChainDescription swapChainDescription;
+		swapChainDescription.window = _window.get();
+		
+		_swapChain = _renderer->CreateSwapChain(swapChainDescription);
 	}
 
 	void Application::Run()
@@ -62,6 +79,7 @@ namespace mk
 			_debugLayer->End();
 
 			_window->OnUpdate();
+			_swapChain->Present();
 		}
 	}
 

@@ -12,7 +12,7 @@ namespace mk
 {
 	bool Keyboard::IsKeyPressed(Key key)
 	{
-		auto* window = static_cast<GLFWwindow*>(Application::Get().Window().NativeHandle());
+		auto window = reinterpret_cast<GLFWwindow*>(Application::Get().Window().NativeHandle());
 		auto state = glfwGetKey(window, ToPlatformKey(key));
         return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}

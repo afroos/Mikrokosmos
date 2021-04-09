@@ -122,6 +122,17 @@
     <ClCompile Include="Events\KeyEvents.ixx" />
     <ClCompile Include="Events\MouseEvents.ixx" />
     <ClCompile Include="Events\WindowEvents.ixx" />
+    <ClCompile Include="Graphics\Graphics.ixx" />
+    <ClCompile Include="Graphics\GraphicsSystem.ixx" />
+    <ClCompile Include="Graphics\Rendering\DeviceContext.ixx" />
+    <ClCompile Include="Graphics\Rendering\GL\GLDeviceContext.ixx" />
+    <ClCompile Include="Graphics\Rendering\GL\GLRenderDevice.ixx" />
+    <ClCompile Include="Graphics\Rendering\GL\GLRenderer.ixx" />
+    <ClCompile Include="Graphics\Rendering\GL\GLSwapChain.ixx" />
+    <ClCompile Include="Graphics\Rendering\Renderer.ixx" />
+    <ClCompile Include="Graphics\Rendering\RenderDevice.ixx" />
+    <ClCompile Include="Graphics\Rendering\Rendering.ixx" />
+    <ClCompile Include="Graphics\Rendering\SwapChain.ixx" />
     <ClCompile Include="Input\Input.ixx" />
     <ClCompile Include="Input\Keyboard.ixx" />
     <ClCompile Include="Input\Mouse.ixx" />

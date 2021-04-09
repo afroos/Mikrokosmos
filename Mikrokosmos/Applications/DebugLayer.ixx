@@ -10,7 +10,7 @@ namespace mk
 	export
 	{
 
-		class  DebugLayer : public Layer
+		class DebugLayer : public Layer
 		{
 
 		public:

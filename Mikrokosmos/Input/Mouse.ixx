@@ -9,7 +9,7 @@ namespace mk
 	export
 	{
 
-		class  Mouse
+		class Mouse
 		{
 
 		public:

@@ -7,7 +7,7 @@ import Mikrokosmos.Events.Event;
 export namespace mk
 {
 
-	class  Layer
+	class Layer
 	{
 
 	public:

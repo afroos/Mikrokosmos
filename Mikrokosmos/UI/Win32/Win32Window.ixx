@@ -65,14 +65,14 @@ namespace mk
 			                       nullptr, 
 			                       nullptr);
 
-		glfwMakeContextCurrent(_window);
+		glfwMakeContextCurrent(_window); // MUDAR
 		auto status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		glfwSetWindowUserPointer(_window, this);
 		// VSync?
 
 		glfwSetWindowCloseCallback(_window, [](GLFWwindow* window)
 			{
-				auto data = static_cast<Window*>(glfwGetWindowUserPointer(window));
+				auto data = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 							
 				WindowClosedEvent event;
 
@@ -81,7 +81,7 @@ namespace mk
 
 		glfwSetWindowSizeCallback(_window, [](GLFWwindow* window, int width, int height)
 			{
-				auto data = static_cast<Window*>(glfwGetWindowUserPointer(window));
+				auto data = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 
 				auto newSize = Vector2u{ static_cast<std::size_t>(width), static_cast<std::size_t>(height) };
 
@@ -92,7 +92,7 @@ namespace mk
 
 		glfwSetKeyCallback(_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
-				auto data = static_cast<Window*>(glfwGetWindowUserPointer(window));
+				auto data = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 
 				switch (action)
 				{
@@ -119,7 +119,7 @@ namespace mk
 
 		glfwSetCharCallback(_window, [](GLFWwindow* window, unsigned int keycode)
 			{
-				auto data = static_cast<Window*>(glfwGetWindowUserPointer(window));
+				auto data = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 
 				CharacterTypedEvent event{ keycode };
 				data->callback(event);
@@ -127,7 +127,7 @@ namespace mk
 
 		glfwSetMouseButtonCallback(_window, [](GLFWwindow* window, int button, int action, int mods)
 			{
-				auto data = static_cast<Window*>(glfwGetWindowUserPointer(window));
+				auto data = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 
 				switch (action)
 				{
@@ -148,7 +148,7 @@ namespace mk
 
 		glfwSetScrollCallback(_window, [](GLFWwindow* window, double xOffset, double yOffset)
 			{
-				auto data = static_cast<Window*>(glfwGetWindowUserPointer(window));
+				auto data = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 
 				MouseScrolledEvent event{ Vector2i {static_cast<int>(xOffset), static_cast<int>(yOffset)} };
 				
@@ -157,7 +157,7 @@ namespace mk
 
 		glfwSetCursorPosCallback(_window, [](GLFWwindow* window, double xPos, double yPos)
 			{
-				auto data = static_cast<Window*>(glfwGetWindowUserPointer(window));
+				auto data = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 
 				MouseMovedEvent event{ Point2i {static_cast<int>(xPos), static_cast<int>(yPos)} };
 				
@@ -175,7 +175,6 @@ namespace mk
 	void Win32Window::OnUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(_window);
 	}
 
 	void* Win32Window::NativeHandle() const
