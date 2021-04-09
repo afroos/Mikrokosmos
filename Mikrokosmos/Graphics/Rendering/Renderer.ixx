@@ -17,7 +17,7 @@ export namespace mk
 		RendererDescription()  = default;
 		~RendererDescription() = default;
 
-		std::string name = "a";
+		std::string name = "";
 
 	};
 

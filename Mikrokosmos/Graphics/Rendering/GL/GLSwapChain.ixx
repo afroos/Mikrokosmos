@@ -36,6 +36,8 @@ namespace mk
 		: SwapChain{ description }
 	{
 		_nativeWindow = reinterpret_cast<GLFWwindow*>(_window->NativeHandle());
+		glfwMakeContextCurrent(_nativeWindow);
+		auto status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	}
 
 	void GLSwapChain::Present()

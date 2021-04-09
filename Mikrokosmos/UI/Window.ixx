@@ -28,7 +28,7 @@ namespace mk
 
 		public:
 
-			using EventCallback = Delegate<void(Event&)>;
+			using Callback = Delegate<void(Event&)>;
 
 			virtual ~Window() = default;
 
@@ -36,11 +36,11 @@ namespace mk
 
 			virtual void OnUpdate() = 0;
 
-			 Vector2u    Size()   const;
-			 std::size_t Width()  const;
-			 std::size_t Height() const;
+			Vector2u    Size()   const;
+			std::size_t Width()  const;
+			std::size_t Height() const;
 
-			EventCallback callback;
+			Callback EventCallback;
 
 			virtual void* NativeHandle() const = 0;
 
@@ -86,4 +86,5 @@ namespace mk
 	{
 		return _size.Y();
 	}
+
 }

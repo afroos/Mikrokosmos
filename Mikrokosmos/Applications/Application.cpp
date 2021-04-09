@@ -18,12 +18,13 @@ namespace mk
 		// Singleton assert?
 		_instance = this;
 		_window = Window::Create();
-		_window->callback.Bind(this, &Application::OnEvent);
+		_window->EventCallback.Bind(this, &Application::OnEvent);
+
+		InitializeGraphics();
 
 		_debugLayer = new mk::DebugLayer();
 		PushOverlay(_debugLayer);
 
-		InitializeGraphics();
 	}
 
 
@@ -39,9 +40,9 @@ namespace mk
 
 	void Application::InitializeGraphics()
 	{
-		_renderer      = GraphicsSystem::CreateRenderer("OpenGL");
+		_renderer = GraphicsSystem::CreateRenderer("OpenGL");
 		
-		_renderDevice  = _renderer->CreateRenderDevice(mk::RenderDeviceDescription{});
+		_renderDevice = _renderer->CreateRenderDevice(mk::RenderDeviceDescription{});
 		
 		_deviceContext = _renderer->CreateDeviceContext(mk::DeviceContextDescription{});
 		

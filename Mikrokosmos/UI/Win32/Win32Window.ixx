@@ -65,8 +65,6 @@ namespace mk
 			                       nullptr, 
 			                       nullptr);
 
-		glfwMakeContextCurrent(_window); // MUDAR
-		auto status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		glfwSetWindowUserPointer(_window, this);
 		// VSync?
 
@@ -76,7 +74,7 @@ namespace mk
 							
 				WindowClosedEvent event;
 
-				data->callback(event);
+				data->EventCallback(event);
 			});
 
 		glfwSetWindowSizeCallback(_window, [](GLFWwindow* window, int width, int height)
@@ -87,7 +85,7 @@ namespace mk
 
 				WindowResizedEvent event{ newSize };
 
-				data->callback(event);
+				data->EventCallback(event);
 			});
 
 		glfwSetKeyCallback(_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -99,19 +97,19 @@ namespace mk
 				case GLFW_PRESS:
 				{
 					KeyPressedEvent event{ ToMikrokosmosKey(key), 0 };
-					data->callback(event);
+					data->EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					KeyReleasedEvent event{ ToMikrokosmosKey(key) };
-					data->callback(event);
+					data->EventCallback(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
 					KeyPressedEvent event{ ToMikrokosmosKey(key), 1 };
-					data->callback(event);
+					data->EventCallback(event);
 					break;
 				}
 				}
@@ -122,7 +120,7 @@ namespace mk
 				auto data = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 
 				CharacterTypedEvent event{ keycode };
-				data->callback(event);
+				data->EventCallback(event);
 			});
 
 		glfwSetMouseButtonCallback(_window, [](GLFWwindow* window, int button, int action, int mods)
@@ -134,13 +132,13 @@ namespace mk
 					case GLFW_PRESS:
 					{
 						MouseButtonPressedEvent event{ ToMikrokosmosButton(button) };
-						data->callback(event);
+						data->EventCallback(event);
 						break;
 					}
 					case GLFW_RELEASE:
 					{
 						MouseButtonReleasedEvent event{ ToMikrokosmosButton(button) };
-						data->callback(event);
+						data->EventCallback(event);
 						break;
 					}
 				}
@@ -152,7 +150,7 @@ namespace mk
 
 				MouseScrolledEvent event{ Vector2i {static_cast<int>(xOffset), static_cast<int>(yOffset)} };
 				
-				data->callback(event);
+				data->EventCallback(event);
 			});
 
 		glfwSetCursorPosCallback(_window, [](GLFWwindow* window, double xPos, double yPos)
@@ -161,7 +159,7 @@ namespace mk
 
 				MouseMovedEvent event{ Point2i {static_cast<int>(xPos), static_cast<int>(yPos)} };
 				
-				data->callback(event);
+				data->EventCallback(event);
 			});
 
 	}
