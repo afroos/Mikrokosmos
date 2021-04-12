@@ -66,11 +66,11 @@ namespace mk
 	{
 		_renderer = GraphicsSystem::CreateRenderer("OpenGL");
 		
-		_renderDevice = _renderer->CreateRenderDevice(mk::RenderDeviceDescription{});
+		_renderDevice = _renderer->CreateRenderDevice(mk::RenderDevice::Description{});
 		
-		_deviceContext = _renderer->CreateDeviceContext(mk::DeviceContextDescription{});
+		_deviceContext = _renderer->CreateDeviceContext(mk::DeviceContext::Description{});
 		
-		mk::SwapChainDescription swapChainDescription;
+		mk::SwapChain::Description swapChainDescription;
 		swapChainDescription.window = _window.get();
 		
 		_swapChain = _renderer->CreateSwapChain(swapChainDescription);

@@ -9,19 +9,19 @@ export module Mikrokosmos.Graphics.Rendering.DeviceContext;
 export namespace mk
 {
 
-	struct DeviceContextDescription
-	{
-		DeviceContextDescription() = default;
-	};
-
 	class DeviceContext
 	{
 
 	public:
 
+		struct Description
+		{
+			Description() = default;
+		};
+
 		DeviceContext() = delete;
 
-		DeviceContext(const DeviceContextDescription& description = {});
+		DeviceContext(const Description& description = {});
 
 		virtual ~DeviceContext() = default;
 
@@ -35,7 +35,7 @@ module :private;
 
 namespace mk
 {
-	DeviceContext::DeviceContext(const DeviceContextDescription& description)
+	DeviceContext::DeviceContext(const DeviceContext::Description& description)
 	{
 
 	}

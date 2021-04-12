@@ -14,25 +14,25 @@ namespace mk
 	export
 	{
 
-		struct WindowDescription
-		{
-			WindowDescription()  = default;
-			~WindowDescription() = default;
-			
-			std::string title = "Mikrokosmos Framework";
-			Vector2u    size  = { 1280, 720 };
-		};
-
 		class Window
 		{
 
 		public:
 
+			struct Description
+			{
+				Description() = default;
+				~Description() = default;
+
+				std::string title = "Mikrokosmos Framework";
+				Vector2u    size = { 1280, 720 };
+			};
+
 			using Callback = Delegate<void(Event&)>;
 
 			virtual ~Window() = default;
 
-			static std::unique_ptr<Window> Create(const WindowDescription& description = WindowDescription{});
+			static std::unique_ptr<Window> Create(const Description& description = Description{});
 
 			virtual void OnUpdate() = 0;
 
@@ -46,7 +46,7 @@ namespace mk
 
 		protected:
 
-			Window(const WindowDescription& description);
+			Window(const Description& description);
 
 		private:
 
@@ -64,7 +64,7 @@ module :private;
 namespace mk
 {
 
-	Window::Window(const WindowDescription& description)
+	Window::Window(const Window::Description& description)
 		:
 		_title { description.title },
 		_size  { description.size  }

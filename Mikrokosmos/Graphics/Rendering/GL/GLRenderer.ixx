@@ -19,9 +19,9 @@ export namespace mk
 
 		GLRenderer() = default;
 
-		std::unique_ptr<RenderDevice>  CreateRenderDevice  (const RenderDeviceDescription& description ) override;
-		std::unique_ptr<DeviceContext> CreateDeviceContext (const DeviceContextDescription& description) override;
-		std::unique_ptr<SwapChain>     CreateSwapChain     (const SwapChainDescription& description    ) override;
+		std::unique_ptr<RenderDevice>  CreateRenderDevice  (const RenderDevice::Description& description ) override;
+		std::unique_ptr<DeviceContext> CreateDeviceContext (const DeviceContext::Description& description) override;
+		std::unique_ptr<SwapChain>     CreateSwapChain     (const SwapChain::Description& description    ) override;
 
 	private:
 
@@ -35,17 +35,17 @@ module :private;
 namespace mk
 {
 
-	std::unique_ptr<RenderDevice> GLRenderer::CreateRenderDevice(const RenderDeviceDescription& description)
+	std::unique_ptr<RenderDevice> GLRenderer::CreateRenderDevice(const RenderDevice::Description& description)
 	{
 		return std::make_unique<GLRenderDevice>(description);
 	}
 
-	std::unique_ptr<DeviceContext> GLRenderer::CreateDeviceContext(const DeviceContextDescription& description)
+	std::unique_ptr<DeviceContext> GLRenderer::CreateDeviceContext(const DeviceContext::Description& description)
 	{
 		return std::make_unique<GLDeviceContext>(description);
 	}
 
-	std::unique_ptr<SwapChain> GLRenderer::CreateSwapChain(const SwapChainDescription& description)
+	std::unique_ptr<SwapChain> GLRenderer::CreateSwapChain(const SwapChain::Description& description)
 	{
 		return std::make_unique<GLSwapChain>(description);
 	}

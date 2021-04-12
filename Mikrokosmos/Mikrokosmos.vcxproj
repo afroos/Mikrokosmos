@@ -124,6 +124,7 @@
     <ClCompile Include="Events\WindowEvents.ixx" />
     <ClCompile Include="Graphics\Graphics.ixx" />
     <ClCompile Include="Graphics\GraphicsSystem.ixx" />
+    <ClCompile Include="Graphics\Rendering\Buffer.ixx" />
     <ClCompile Include="Graphics\Rendering\DeviceContext.ixx" />
     <ClCompile Include="Graphics\Rendering\GL\GLDeviceContext.ixx" />
     <ClCompile Include="Graphics\Rendering\GL\GLRenderDevice.ixx" />

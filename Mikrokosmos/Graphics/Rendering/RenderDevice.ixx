@@ -9,22 +9,25 @@ export module Mikrokosmos.Graphics.Rendering.RenderDevice;
 export namespace mk
 {
 
-	struct RenderDeviceDescription
-	{
-		RenderDeviceDescription() = default;
-	};
-
 	class RenderDevice
 	{
 
 	public:
 
+		struct Description
+		{
+			Description() = default;
+		};
+
 		RenderDevice() = delete;
-		RenderDevice(const RenderDeviceDescription& description = {});
+		RenderDevice(const Description& description = {});
 
 		virtual ~RenderDevice() = default;
 
-		virtual void Method() {}
+		//virtual Buffer* CreateBuffer(const BufferDescription& description = {});
+		//Texture* CreateTexture(TextureDescription);
+		//Shader* CreateShader(ShaderDescription);
+		//Pipeline* CreatePipeline(PipelineDescription);
 
 	};
 
@@ -34,7 +37,7 @@ module :private;
 
 namespace mk
 {
-	RenderDevice::RenderDevice(const RenderDeviceDescription& description)
+	RenderDevice::RenderDevice(const RenderDevice::Description& description)
 	{
 
 	}

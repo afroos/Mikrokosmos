@@ -14,7 +14,7 @@ export namespace mk
 	public:
 
 		GLRenderDevice() = delete;
-		GLRenderDevice(const RenderDeviceDescription& description);
+		GLRenderDevice(const RenderDevice::Description& description);
 
 		virtual ~GLRenderDevice() = default;
 
@@ -26,7 +26,7 @@ module :private;
 
 namespace mk
 {
-	GLRenderDevice::GLRenderDevice(const RenderDeviceDescription& description)
+	GLRenderDevice::GLRenderDevice(const RenderDevice::Description& description)
 		:
 		RenderDevice{ description }
 	{

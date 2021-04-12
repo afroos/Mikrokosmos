@@ -9,21 +9,21 @@ import Mikrokosmos.UI.Window;
 export namespace mk
 {
 
-	struct SwapChainDescription
-	{
-		SwapChainDescription() = default;
-
-		mk::Window* window;
-	};
-
 	class SwapChain
 	{
 
 	public:
 
+		struct Description
+		{
+			Description() = default;
+
+			mk::Window* window;
+		};
+
 		SwapChain() = delete;
 		
-		SwapChain(const SwapChainDescription& description);
+		SwapChain(const Description& description);
 
 		virtual ~SwapChain() = default;
 
@@ -46,7 +46,7 @@ module :private;
 namespace mk
 {
 
-	SwapChain::SwapChain(const SwapChainDescription& description)
+	SwapChain::SwapChain(const SwapChain::Description& description)
 		: _window { description.window }
 	{
 

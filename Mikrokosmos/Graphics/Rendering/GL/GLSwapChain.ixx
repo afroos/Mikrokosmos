@@ -19,7 +19,7 @@ export namespace mk
 	public:
 
 		GLSwapChain() = delete;
-		GLSwapChain(const SwapChainDescription& description);
+		GLSwapChain(const SwapChain::Description& description);
 
 		void Present() override;
 
@@ -35,7 +35,7 @@ module :private;
 
 namespace mk
 {
-	GLSwapChain::GLSwapChain(const SwapChainDescription& description)
+	GLSwapChain::GLSwapChain(const SwapChain::Description& description)
 		: SwapChain{ description }
 	{
 		_nativeWindow = reinterpret_cast<GLFWwindow*>(_window->NativeHandle());

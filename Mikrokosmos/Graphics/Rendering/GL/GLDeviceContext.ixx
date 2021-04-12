@@ -16,7 +16,7 @@ export namespace mk
 
 		GLDeviceContext() = delete;
 
-		GLDeviceContext(const DeviceContextDescription& description);
+		GLDeviceContext(const DeviceContext::Description& description);
 
 		virtual ~GLDeviceContext() = default;
 
@@ -28,7 +28,7 @@ module :private;
 
 namespace mk
 {
-	GLDeviceContext::GLDeviceContext(const DeviceContextDescription& description)
+	GLDeviceContext::GLDeviceContext(const DeviceContext::Description& description)
 		: DeviceContext{ description }
 	{
 

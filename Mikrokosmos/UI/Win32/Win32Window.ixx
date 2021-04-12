@@ -25,7 +25,7 @@ namespace mk
 
 		public:
 
-			Win32Window(const WindowDescription& description);
+			Win32Window(const Window::Description& description);
 
 			virtual ~Win32Window();
 
@@ -39,7 +39,7 @@ namespace mk
 
 		};
 
-		std::unique_ptr<Window> Window::Create(const WindowDescription& description)
+		std::unique_ptr<Window> Window::Create(const Window::Description& description)
 		{
 			return std::make_unique<Win32Window>(description);
 		}
@@ -53,7 +53,7 @@ module :private;
 namespace mk
 {
 
-	Win32Window::Win32Window(const WindowDescription& description)
+	Win32Window::Win32Window(const Window::Description& description)
 		:
 		Window(description)
 	{

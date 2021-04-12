@@ -12,27 +12,27 @@ import Mikrokosmos.Graphics.Rendering.SwapChain;
 export namespace mk
 {
 
-	struct RendererDescription
-	{
-		RendererDescription()  = default;
-		~RendererDescription() = default;
-
-		std::string name = "";
-
-	};
-
 	class Renderer
 	{
 
 	public:
 
+		struct Description
+		{
+			Description() = default;
+			~Description() = default;
+
+			std::string name = "";
+
+		};
+
 		Renderer() = default;
 		
 		virtual ~Renderer() = default;
 
-		virtual std::unique_ptr<RenderDevice>  CreateRenderDevice  (const RenderDeviceDescription&  description ) = 0;
-		virtual std::unique_ptr<DeviceContext> CreateDeviceContext (const DeviceContextDescription& description ) = 0;
-		virtual std::unique_ptr<SwapChain>     CreateSwapChain     (const SwapChainDescription&     description ) = 0;
+		virtual std::unique_ptr<RenderDevice>  CreateRenderDevice  (const RenderDevice::Description&  description ) = 0;
+		virtual std::unique_ptr<DeviceContext> CreateDeviceContext (const DeviceContext::Description& description ) = 0;
+		virtual std::unique_ptr<SwapChain>     CreateSwapChain     (const SwapChain::Description&     description ) = 0;
 
 	};
 
