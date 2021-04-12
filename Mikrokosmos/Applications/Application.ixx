@@ -65,6 +65,8 @@ export namespace mk
 		std::unique_ptr<DeviceContext> _deviceContext;
 		std::unique_ptr<SwapChain>     _swapChain;
 
+		unsigned int vertexArrayId, vertexBufferId, indexBufferId;
+
 	};
 
 }
