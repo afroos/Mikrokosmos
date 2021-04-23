@@ -1,13 +1,11 @@
 module;
 
-#include <functional>
-#include <map>
 #include <memory>
+#include <string>
 
 export module Mikrokosmos.Graphics.GraphicsSystem;
 
-import Mikrokosmos.Graphics.Rendering.GLRenderer;
-import Mikrokosmos.Graphics.Rendering.Renderer;
+import Mikrokosmos.Graphics.Rendering;
 
 export namespace mk
 {
@@ -17,36 +15,28 @@ export namespace mk
 
 	public:
 
-		static std::unique_ptr<Renderer> CreateRenderer(const std::string& name);
+		struct Description
+		{
+			std::string renderer = "OpenGL";
+		};
+
+		GraphicsSystem(const Description& description);
+
+		void Initialize();
+		void Render();
+		void Shutdown();
 
 	private:
 
+		std::unique_ptr<Renderer> CreateRenderer(const std::string& name);
+
+	private:
+
+		std::unique_ptr<Renderer>      _renderer;
+		std::unique_ptr<RenderDevice>  _renderDevice;
+		std::unique_ptr<DeviceContext> _deviceContext;
+		std::unique_ptr<SwapChain>     _swapChain;
 
 	};
 
-
-}
-
-module :private;
-
-namespace mk
-{
-	std::unique_ptr<Renderer> GraphicsSystem::CreateRenderer(const std::string& name)
-	{
-		static std::map<
-			std::string, 
-			std::function<std::unique_ptr<Renderer>()>> dispatchTable
-		{
-			{ "OpenGL", []() { return std::make_unique<GLRenderer>(); } }
-		};
-
-		auto entry = dispatchTable.find(name);
-		if (entry != dispatchTable.end())
-		{
-			auto [name, instance] = *entry;
-			return instance();
-		}
-		else return nullptr;
-
-	}
 }

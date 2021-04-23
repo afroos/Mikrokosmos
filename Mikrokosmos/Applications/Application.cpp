@@ -13,73 +13,66 @@ import Mikrokosmos.Graphics;
 namespace mk
 {
 
-	Application::Application()
+	Application::Application(const Properties& properties)
+		: _graphicsSystem{ {.renderer = "OpenGL"} }
 	{
-		// Singleton assert?
-		_instance = this;
-		_window = Window::Create();
+		mk::Window::Description windowDescription{ .title = properties.name, .size = properties.windowSize };
+		_window = Window::Create(windowDescription);
 		_window->EventCallback.Bind(this, &Application::OnEvent);
+	}
 
-		InitializeGraphics();
+	Application::~Application()
+	{
+		
+	}
+
+	void Application::Initialize()
+	{
+		_instance = this;
+
+		_graphicsSystem.Initialize();
 
 		_debugLayer = new mk::DebugLayer();
 		PushOverlay(_debugLayer);
 
 		// Test:
-			glGenVertexArrays(1, &vertexArrayId);
-			glBindVertexArray(vertexArrayId);
+		glGenVertexArrays(1, &vertexArrayId);
+		glBindVertexArray(vertexArrayId);
 
-			glGenBuffers(1, &vertexBufferId);
-			glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
+		glGenBuffers(1, &vertexBufferId);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId);
 
-			float vertices[3 * 3] = {
-				-0.5f, -0.5f, 0.0f,
-				 0.5f, -0.5f, 0.0f,
-				 0.0f,  0.5f, 0.0f
-			};
+		float vertices[3 * 3] = {
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.0f,  0.5f, 0.0f
+		};
 
-			glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
-			glGenBuffers(1, &indexBufferId);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
+		glGenBuffers(1, &indexBufferId);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
 
-			unsigned int indices[3] = { 0, 1, 2 };
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		unsigned int indices[3] = { 0, 1, 2 };
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	}
-
-
-	Application::~Application()
-	{
-
-	}
-
-	Window& Application::Window() const
-	{
-		return *_window;
-	}
-
-	void Application::InitializeGraphics()
-	{
-		_renderer = GraphicsSystem::CreateRenderer("OpenGL");
-		
-		_renderDevice = _renderer->CreateRenderDevice(mk::RenderDevice::Description{});
-		
-		_deviceContext = _renderer->CreateDeviceContext(mk::DeviceContext::Description{});
-		
-		mk::SwapChain::Description swapChainDescription;
-		swapChainDescription.window = _window.get();
-		
-		_swapChain = _renderer->CreateSwapChain(swapChainDescription);
+		OnInitialize();
 	}
 
 	void Application::Run()
 	{
 		mk::Trace("Application started.");
 
+		Initialize();
+		MainLoop();
+		Shutdown();
+	}
+
+	void Application::MainLoop()
+	{
 		while (_running)
 		{
 			if (!_minimized)
@@ -90,8 +83,8 @@ namespace mk
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			// Test:
-				glBindVertexArray(vertexArrayId);
-				glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+			glBindVertexArray(vertexArrayId);
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
 			for (auto layer : _layerStack)
 			{
@@ -108,8 +101,13 @@ namespace mk
 			_debugLayer->End();
 
 			_window->OnUpdate();
-			_swapChain->Present();
+			_graphicsSystem.Render();
 		}
+	}
+
+	void Application::Shutdown()
+	{
+		_graphicsSystem.Shutdown();
 	}
 
 	void Application::OnEvent(Event& event)
@@ -145,6 +143,11 @@ namespace mk
 	Application& Application::Get()
 	{
 		return *_instance;
+	}
+
+	mk::Window& Application::Window() const
+	{
+		return *_window;
 	}
 
 	mk::DebugLayer* Application::DebugLayer()

@@ -1,34 +1,32 @@
 module;
 
-//#include <>
+#include <cstddef>
 
 export module Mikrokosmos.Graphics.Rendering.Buffer;
 
-//import Mikrokosmos.UI.Window;
+import Mikrokosmos.Graphics.Rendering.Resource;
 
-/*export namespace mk
+export namespace mk
 {
 
-	struct BufferDescription
+	class Buffer : public Resource
 	{
-		BufferDescription() = default;
-
-		std::string name;
-		BufferBindFlags bindFlags;
-		BufferUsage usage;
-		std::size_t sizeInBytes;
-		BufferCPUAccessFlags
-	};
-
-	class Buffer
-	{
-
+	
 	public:
 
-		Buffer() = delete;
-		Buffer(const BufferDescription& description);
+		struct Description
+		{		
+			/*std::size_t       elementCount;
+			std::size_t       elementSize;
+			Resource::Binding binding;
+			Resource::Usage   usage;*/		
+		};
 
 		virtual ~Buffer() = default;
+
+	protected:
+
+		Buffer(const Description& description);
 
 	};
 
@@ -39,10 +37,12 @@ module :private;
 namespace mk
 {
 
-	Buffer::Buffer(const BufferDescription& description)
-	{
-
+	Buffer::Buffer(const Buffer::Description& description)
+		: 
+		Resource
+		{ 
+		}
+	{	
 	}
 
-
-}*/
+}

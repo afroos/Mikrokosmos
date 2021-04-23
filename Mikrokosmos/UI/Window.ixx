@@ -21,18 +21,15 @@ namespace mk
 
 			struct Description
 			{
-				Description() = default;
-				~Description() = default;
-
-				std::string title = "Mikrokosmos Framework";
-				Vector2u    size = { 1280, 720 };
+				std::string title = "Mikrokosmos Window";
+				Vector2u    size  = { 1280, 720 };
 			};
 
 			using Callback = Delegate<void(Event&)>;
 
 			virtual ~Window() = default;
 
-			static std::unique_ptr<Window> Create(const Description& description = Description{});
+			static std::unique_ptr<Window> Create(const Description& description);
 
 			virtual void OnUpdate() = 0;
 
@@ -44,9 +41,11 @@ namespace mk
 
 			virtual void* NativeHandle() const = 0;
 
+			Window(const Description& description);
+
 		protected:
 
-			Window(const Description& description);
+			
 
 		private:
 

@@ -40,9 +40,9 @@ class Sandbox : public mk::Application
 public:
 
 	Sandbox()
+		: mk::Application{ {.name = "Mikrokosmos Sandbox", .windowSize = {1280, 720}} }
 	{
 		PushLayer(new ExampleLayer());
-
 	}
 
 	~Sandbox() = default;

@@ -1,6 +1,7 @@
 module;
 
 #include <memory>
+#include <string>
 
 export module Mikrokosmos.Applications.Application;
 
@@ -8,6 +9,7 @@ import Mikrokosmos.Applications.Layer;
 import Mikrokosmos.Applications.LayerStack;
 import Mikrokosmos.Events;
 import Mikrokosmos.Graphics;
+import Mikrokosmos.Mathematics;
 import Mikrokosmos.UI.Window;
 
 export namespace mk
@@ -19,7 +21,14 @@ export namespace mk
 
 	public:
 
-		Application();
+		struct Properties
+		{
+			std::string name       = "Mikrokosmos Application";
+			Vector2u    windowSize = { 1280, 720 };
+			std::string renderer   = "OpenGL";
+		};
+
+		Application(const Properties& properties);
 		virtual ~Application();
 
 		Application(const Application&)            = delete;
@@ -27,10 +36,13 @@ export namespace mk
 		Application& operator=(const Application&) = delete;
 		Application& operator=(Application&&)      = delete;
 
-		Window& Window() const;
-
+		void Initialize();
 		void Run();
+		void MainLoop();
+		void Shutdown();
 
+		virtual void OnInitialize() {}
+		virtual void OnShutdown()   {}
 		void OnEvent(Event& event);
 
 		void PushLayer   (Layer* layer);
@@ -38,11 +50,11 @@ export namespace mk
 
 		static Application& Get();
 
+		Window& Window() const;
+
 		mk::DebugLayer* DebugLayer();
 
 	private:
-
-		void InitializeGraphics();
 
 		void OnWindowClosedEvent(WindowClosedEvent& event);
 		void OnWindowResizedEvent(WindowResizedEvent& event);
@@ -60,10 +72,7 @@ export namespace mk
 		bool _running   { true  };
 		bool _minimized { false };
 
-		std::unique_ptr<Renderer>      _renderer;
-		std::unique_ptr<RenderDevice>  _renderDevice;
-		std::unique_ptr<DeviceContext> _deviceContext;
-		std::unique_ptr<SwapChain>     _swapChain;
+		GraphicsSystem _graphicsSystem;
 
 		unsigned int vertexArrayId, vertexBufferId, indexBufferId;
 

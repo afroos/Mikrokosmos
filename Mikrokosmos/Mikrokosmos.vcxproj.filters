@@ -152,7 +152,13 @@
     <ClCompile Include="Graphics\GraphicsSystem.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Rendering\Resource.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Graphics\Rendering\Buffer.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GraphicsSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
