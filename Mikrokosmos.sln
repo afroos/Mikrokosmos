@@ -11,7 +11,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "External\GLFW\GLFW.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Glad", "External\Glad\Glad.vcxproj", "{4AEE64C8-92A6-49DD-8779-454955EBD5E9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "External\ImGui\ImGui.vcxproj", "{9F68EF7D-7F2F-43AA-92CE-F5F1E432E294}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "External\ImGui.vcxproj", "{9F68EF7D-7F2F-43AA-92CE-F5F1E432E294}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

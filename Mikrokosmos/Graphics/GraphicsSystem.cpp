@@ -6,7 +6,6 @@ module;
 
 module Mikrokosmos.Graphics.GraphicsSystem;
 
-import Mikrokosmos.Applications.Application;
 import Mikrokosmos.Graphics.Rendering.GLRenderer;
 
 namespace mk
@@ -14,29 +13,18 @@ namespace mk
 	GraphicsSystem::GraphicsSystem(const Description& description)
 	{
 		_renderer = CreateRenderer(description.renderer);
-	}
-	
-	void GraphicsSystem::Initialize()
-	{
+
 		_renderDevice = _renderer->CreateRenderDevice(RenderDevice::Description{});
 
 		_deviceContext = _renderer->CreateDeviceContext(DeviceContext::Description{});
 
-		SwapChain::Description swapChainDescription;
-		swapChainDescription.window = &Application::Get().Window();
-
-		_swapChain = _renderer->CreateSwapChain(swapChainDescription);
+		_swapChain = _renderer->CreateSwapChain({ .window = description.window });
 	}
 
 	void GraphicsSystem::Render()
 	{
 		_swapChain->Present();
 	}	
-	
-	void GraphicsSystem::Shutdown()
-	{
-
-	}
 
 	std::unique_ptr<Renderer> GraphicsSystem::CreateRenderer(const std::string& name)
 	{

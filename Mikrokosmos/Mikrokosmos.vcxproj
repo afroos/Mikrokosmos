@@ -160,6 +160,9 @@
     <ProjectReference Include="..\External\GLFW\GLFW.vcxproj">
       <Project>{7d266073-18e4-4cb9-abf8-19da1563e7e7}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\External\ImGui.vcxproj">
+      <Project>{9f68ef7d-7f2f-43aa-92ce-f5f1e432e294}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\External\ImGui\ImGui.vcxproj">
       <Project>{9f68ef7d-7f2f-43aa-92ce-f5f1e432e294}</Project>
     </ProjectReference>

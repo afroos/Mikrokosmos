@@ -16,8 +16,6 @@ export namespace mk
 
 		struct Description
 		{
-			Description() = default;
-
 			mk::Window* window;
 		};
 

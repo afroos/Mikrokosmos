@@ -6,6 +6,7 @@ module;
 export module Mikrokosmos.Graphics.GraphicsSystem;
 
 import Mikrokosmos.Graphics.Rendering;
+import Mikrokosmos.UI.Window;
 
 export namespace mk
 {
@@ -18,13 +19,12 @@ export namespace mk
 		struct Description
 		{
 			std::string renderer = "OpenGL";
+			Window*     window   = nullptr;
 		};
 
 		GraphicsSystem(const Description& description);
 
-		void Initialize();
 		void Render();
-		void Shutdown();
 
 	private:
 

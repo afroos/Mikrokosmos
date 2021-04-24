@@ -21,14 +21,14 @@ export namespace mk
 
 	public:
 
-		struct Properties
+		struct Description
 		{
 			std::string name       = "Mikrokosmos Application";
 			Vector2u    windowSize = { 1280, 720 };
 			std::string renderer   = "OpenGL";
 		};
 
-		Application(const Properties& properties);
+		Application(const Description& description);
 		virtual ~Application();
 
 		Application(const Application&)            = delete;
@@ -36,23 +36,20 @@ export namespace mk
 		Application& operator=(const Application&) = delete;
 		Application& operator=(Application&&)      = delete;
 
-		void Initialize();
 		void Run();
-		void MainLoop();
-		void Shutdown();
 
-		virtual void OnInitialize() {}
-		virtual void OnShutdown()   {}
 		void OnEvent(Event& event);
-
-		void PushLayer   (Layer* layer);
-		void PushOverlay (Layer* layer);
 
 		static Application& Get();
 
 		Window& Window() const;
 
 		mk::DebugLayer* DebugLayer();
+
+	protected:
+
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* layer);
 
 	private:
 
@@ -61,9 +58,12 @@ export namespace mk
 
 	private:
 
-		inline static Application* _instance { nullptr };
+		inline static Application* _instance{ nullptr };
 
+		std::string _name;
 		std::unique_ptr<mk::Window> _window;
+
+		GraphicsSystem _graphicsSystem;
 
 		LayerStack _layerStack;
 
@@ -71,8 +71,6 @@ export namespace mk
 
 		bool _running   { true  };
 		bool _minimized { false };
-
-		GraphicsSystem _graphicsSystem;
 
 		unsigned int vertexArrayId, vertexBufferId, indexBufferId;
 

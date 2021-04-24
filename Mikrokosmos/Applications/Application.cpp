@@ -13,26 +13,16 @@ import Mikrokosmos.Graphics;
 namespace mk
 {
 
-	Application::Application(const Properties& properties)
-		: _graphicsSystem{ {.renderer = "OpenGL"} }
-	{
-		mk::Window::Description windowDescription{ .title = properties.name, .size = properties.windowSize };
-		_window = Window::Create(windowDescription);
-		_window->EventCallback.Bind(this, &Application::OnEvent);
-	}
-
-	Application::~Application()
-	{
-		
-	}
-
-	void Application::Initialize()
+	Application::Application(const Description& description)
+		: _name           { description.name },
+		  _window         { Window::Create({.title = _name, .size = description.windowSize }) },
+		  _graphicsSystem { {.renderer = description.renderer, .window = _window.get() } },
+		  _debugLayer     { new mk::DebugLayer() }
 	{
 		_instance = this;
+	
+		_window->EventCallback.Bind(this, &Application::OnEvent);
 
-		_graphicsSystem.Initialize();
-
-		_debugLayer = new mk::DebugLayer();
 		PushOverlay(_debugLayer);
 
 		// Test:
@@ -59,20 +49,16 @@ namespace mk
 		unsigned int indices[3] = { 0, 1, 2 };
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-		OnInitialize();
+	}
+
+	Application::~Application()
+	{
 	}
 
 	void Application::Run()
 	{
 		mk::Trace("Application started.");
 
-		Initialize();
-		MainLoop();
-		Shutdown();
-	}
-
-	void Application::MainLoop()
-	{
 		while (_running)
 		{
 			if (!_minimized)
@@ -105,11 +91,6 @@ namespace mk
 		}
 	}
 
-	void Application::Shutdown()
-	{
-		_graphicsSystem.Shutdown();
-	}
-
 	void Application::OnEvent(Event& event)
 	{
 		EventDispatcher dispatcher{ event };
@@ -137,7 +118,6 @@ namespace mk
 	{
 		_layerStack.PushOverlay(layer);
 		layer->OnAttach();
-
 	}
 
 	Application& Application::Get()
