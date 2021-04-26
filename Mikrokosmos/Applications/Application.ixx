@@ -25,7 +25,7 @@ export namespace mk
 		{
 			std::string name       = "Mikrokosmos Application";
 			Vector2u    windowSize = { 1280, 720 };
-			std::string renderer   = "OpenGL";
+			std::string renderer   = "Direct3D11";
 		};
 
 		Application(const Description& description);

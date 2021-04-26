@@ -161,5 +161,8 @@
     <ClCompile Include="Graphics\GraphicsSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Rendering\Direct3D11\Direct3D11Renderer.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

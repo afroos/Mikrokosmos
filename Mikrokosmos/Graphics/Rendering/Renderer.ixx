@@ -30,9 +30,13 @@ export namespace mk
 		
 		virtual ~Renderer() = default;
 
-		virtual std::unique_ptr<RenderDevice>  CreateRenderDevice  (const RenderDevice::Description&  description ) = 0;
-		virtual std::unique_ptr<DeviceContext> CreateDeviceContext (const DeviceContext::Description& description ) = 0;
-		virtual std::unique_ptr<SwapChain>     CreateSwapChain     (const SwapChain::Description&     description ) = 0;
+		//virtual std::unique_ptr<RenderDevice>  CreateRenderDevice  (const RenderDevice::Description&  description ) = 0;
+		//virtual std::unique_ptr<DeviceContext> CreateDeviceContext (const DeviceContext::Description& description ) = 0;
+		//virtual std::unique_ptr<SwapChain>     CreateSwapChain     (const SwapChain::Description&     description ) = 0;
+
+		virtual void Initialize() {};
+		virtual void Render()     {};
+		virtual void Shutdown()   {};
 
 	};
 

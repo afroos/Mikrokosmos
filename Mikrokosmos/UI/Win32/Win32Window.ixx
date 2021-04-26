@@ -29,7 +29,7 @@ namespace mk
 
 			virtual ~Win32Window();
 
-			void OnUpdate() override;
+			void ProcessEvents() override;
 
 			void* NativeHandle() const;
 
@@ -54,10 +54,12 @@ namespace mk
 {
 
 	Win32Window::Win32Window(const Window::Description& description)
-		:
-		Window(description)
+		: Window(description)
 	{
+	
 		glfwInit();
+
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 		_window = glfwCreateWindow(static_cast<int>(Width()), 
 			                       static_cast<int>(Height()), 
@@ -170,7 +172,7 @@ namespace mk
 		glfwTerminate();
 	}
 
-	void Win32Window::OnUpdate()
+	void Win32Window::ProcessEvents()
 	{
 		glfwPollEvents();
 	}

@@ -31,7 +31,7 @@ namespace mk
 
 			static std::unique_ptr<Window> Create(const Description& description);
 
-			virtual void OnUpdate() = 0;
+			virtual void ProcessEvents() = 0;
 
 			Vector2u    Size()   const;
 			std::size_t Width()  const;

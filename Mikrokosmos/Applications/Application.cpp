@@ -23,10 +23,12 @@ namespace mk
 	
 		_window->EventCallback.Bind(this, &Application::OnEvent);
 
-		PushOverlay(_debugLayer);
+		_graphicsSystem.Initialize();
+
+		//PushOverlay(_debugLayer);
 
 		// Test:
-		glGenVertexArrays(1, &vertexArrayId);
+		/*glGenVertexArrays(1, &vertexArrayId);
 		glBindVertexArray(vertexArrayId);
 
 		glGenBuffers(1, &vertexBufferId);
@@ -47,12 +49,13 @@ namespace mk
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId);
 
 		unsigned int indices[3] = { 0, 1, 2 };
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
 
 	}
 
 	Application::~Application()
 	{
+		_graphicsSystem.Shutdown();
 	}
 
 	void Application::Run()
@@ -61,32 +64,33 @@ namespace mk
 
 		while (_running)
 		{
+			_window->ProcessEvents();
+
 			if (!_minimized)
 			{
 			}
 
-			glClearColor(0.1f, 0.1f, 0.1f, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			//glClearColor(0.1f, 0.1f, 0.1f, 1);
+			//glClear(GL_COLOR_BUFFER_BIT);
 
 			// Test:
-			glBindVertexArray(vertexArrayId);
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+			//glBindVertexArray(vertexArrayId);
+			//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
 			for (auto layer : _layerStack)
 			{
 				layer->OnUpdate();
 			}
 
-			_debugLayer->Begin();
+			//_debugLayer->Begin();
 			{
 				for (auto layer : _layerStack)
 				{
 					layer->OnRender();
 				}
 			}
-			_debugLayer->End();
+			//_debugLayer->End();
 
-			_window->OnUpdate();
 			_graphicsSystem.Render();
 		}
 	}

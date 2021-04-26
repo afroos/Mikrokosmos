@@ -40,7 +40,7 @@ class Sandbox : public mk::Application
 public:
 
 	Sandbox()
-		: mk::Application{ {.name = "Mikrokosmos Sandbox", .windowSize = {1280, 720}} }
+		: mk::Application{ {.name = "Mikrokosmos Sandbox", .windowSize = {1280, 720}, .renderer = "Direct3D11"} }
 	{
 		PushLayer(new ExampleLayer());
 	}
