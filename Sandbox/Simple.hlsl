@@ -1,6 +1,19 @@
+cbuffer ModelViewProjectionConstantBuffer : register(b0)
+{
+    matrix model;
+    matrix view;
+    matrix projection;
+};
+
 struct VertexShaderInput
 {
-    float4 position : POSITION;
+    float3 position : POSITION;
+    float4 color    : COLOR;
+};
+
+struct VertexShaderOutput
+{
+    float4 position : SV_POSITION;
     float4 color    : COLOR;
 };
 
@@ -10,14 +23,18 @@ struct PixelShaderInput
     float4 color    : COLOR;
 };
 
-PixelShaderInput VSMain(VertexShaderInput input)
+VertexShaderOutput VSMain(VertexShaderInput input)
 {
-    PixelShaderInput output;
+    VertexShaderOutput output;
+    
+    float4 position = float4(input.position, 1.0f);
 
-    input.position.w = 1.0f;
+    position = mul(position, model);
+    position = mul(position, view);
+    position = mul(position, projection);
+    output.position = position;
 
-    output.position = input.position;
-    output.color    = input.color;
+    output.color = input.color;
 
     return output;
 }

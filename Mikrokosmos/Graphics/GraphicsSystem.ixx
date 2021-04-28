@@ -1,5 +1,6 @@
 module;
 
+#include <cmath>
 #include <memory>
 #include <string>
 
@@ -15,6 +16,86 @@ import Mikrokosmos.UI.Window;
 
 export namespace mk
 {
+
+	struct float3
+	{
+		float x, y, z;
+	};
+
+	struct float4
+	{
+		float x, y, z, w;
+	};
+
+	struct float4x4
+	{
+		union
+		{
+			struct
+			{
+				float _11;
+				float _12;
+				float _13;
+				float _14;
+				float _21;
+				float _22;
+				float _23;
+				float _24;
+				float _31;
+				float _32;
+				float _33;
+				float _34;
+				float _41;
+				float _42;
+				float _43;
+				float _44;
+			};
+			float m[4][4];
+		};
+	};
+
+	struct Vertex
+	{
+		float3 position;
+		float4 normal;
+	};
+
+	struct ConstantBuffer
+	{
+		float4x4 model;
+		float4x4 view;
+		float4x4 projection;
+	};
+
+	inline float4x4 MatrixRotationY(float angle) noexcept
+	{
+
+		float sinAngle = std::sin(angle);
+		float cosAngle = std::cos(angle);
+
+		float4x4 M;
+		M.m[0][0] = cosAngle;
+		M.m[0][1] = 0.0f;
+		M.m[0][2] = -sinAngle;
+		M.m[0][3] = 0.0f;
+
+		M.m[1][0] = 0.0f;
+		M.m[1][1] = 1.0f;
+		M.m[1][2] = 0.0f;
+		M.m[1][3] = 0.0f;
+
+		M.m[2][0] = sinAngle;
+		M.m[2][1] = 0.0f;
+		M.m[2][2] = cosAngle;
+		M.m[2][3] = 0.0f;
+
+		M.m[3][0] = 0.0f;
+		M.m[3][1] = 0.0f;
+		M.m[3][2] = 0.0f;
+		M.m[3][3] = 1.0f;
+		
+		return M;
+	}
 
 	class Direct3D11Exception : public std::exception
 	{
@@ -72,6 +153,7 @@ export namespace mk
 		void CreatePipeline();
 		void CreateVertexBuffer();
 		void CreateIndexBuffer();
+		void CreateConstantBuffer();
 
 		void Clear();
 		void Present();
@@ -105,6 +187,10 @@ export namespace mk
 
 		ComPtr<ID3D11VertexShader>     _vertexShader;
 		ComPtr<ID3D11PixelShader>      _pixelShader;
+
+		ConstantBuffer                 _constantBufferData;
+
+		float                          _angle               = 0.0f;
 	};
 
 	

@@ -19,22 +19,6 @@ import Mikrokosmos.Graphics.Rendering.Direct3D11Renderer;
 namespace mk
 {
 
-	struct float3
-	{
-		float x, y, z;
-	};
-
-	struct float4
-	{
-		float x, y, z, w;
-	};
-
-	struct Vertex
-	{
-		float3 Position;
-		float4 Normal;
-	};
-
 	GraphicsSystem::GraphicsSystem(const Description& description) : 
 		_window       { description.window },
 		_outputWidth  { _window->Width()   },
@@ -68,7 +52,7 @@ namespace mk
 				loadModel();
 						createVertexBuffer();
 						createIndexBuffer();
-				createUniformBuffers();
+						createUniformBuffers();
 				createDescriptorPool();
 				createDescriptorSets();
 				createCommandBuffers();
@@ -88,6 +72,7 @@ namespace mk
 		CreatePipeline();
 		CreateVertexBuffer();
 		CreateIndexBuffer();
+		CreateConstantBuffer();
 	}
 
 	void GraphicsSystem::Shutdown()
@@ -219,6 +204,46 @@ namespace mk
 			)
 		);
 
+		D3D11_TEXTURE2D_DESC depthStencilDescription
+		{
+			.Width          = static_cast<UINT>(_outputWidth),
+			.Height         = static_cast<UINT>(_outputHeight),
+			.MipLevels      = 1,
+			.ArraySize      = 1,
+			.Format         = DXGI_FORMAT_D24_UNORM_S8_UINT,
+			.SampleDesc     = {.Count = 1, .Quality = 0},
+			.Usage          = D3D11_USAGE_DEFAULT,
+			.BindFlags      = D3D11_BIND_DEPTH_STENCIL,
+			.CPUAccessFlags = 0,
+			.MiscFlags      = 0
+		};
+		
+		ThrowIfFailed(
+			_device->CreateTexture2D(
+				&depthStencilDescription,
+				nullptr,
+				&_depthStencil
+			)
+		);
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDescription
+		{
+			.Format        = depthStencilDescription.Format,
+			.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D,
+			.Flags         = 0,
+			.Texture2D     = { .MipSlice = 0 }
+		};
+
+		ThrowIfFailed(
+			_device->CreateDepthStencilView(
+				_depthStencil.Get(),
+				&depthStencilViewDescription,
+				&_depthStencilView
+			)
+		);
+
+
+
 		/*CD3D11_TEXTURE2D_DESC depthStencilDescription(
 			DXGI_FORMAT_D24_UNORM_S8_UINT,
 			static_cast<UINT>(_outputWidth),
@@ -326,16 +351,22 @@ namespace mk
 	void GraphicsSystem::CreateVertexBuffer()
 	{
 
-		Vertex triangleVertices[] =
+		Vertex vertices[] =
 		{
-			{ { +0.0f, +0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
-			{ { +0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-			{ { -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+			{ { -0.5f, 0.5f, -0.5f  }, {0.0f, 1.0f, 0.0f, 1.0f} },
+			{ { 0.5f, 0.5f, -0.5f   }, {1.0f, 1.0f, 0.0f, 1.0f} },
+			{ { 0.5f, 0.5f,  0.5f   }, {1.0f, 1.0f, 1.0f, 1.0f} },
+			{ { -0.5f, 0.5f,  0.5f  }, {0.0f, 1.0f, 1.0f, 1.0f} },
+
+			{ { -0.5f, -0.5f,  0.5f }, {0.0f, 0.0f, 1.0f, 1.0f} },
+			{ { 0.5f, -0.5f,  0.5f  }, {1.0f, 0.0f, 1.0f, 1.0f} },
+			{ { 0.5f, -0.5f, -0.5f  }, {1.0f, 0.0f, 0.0f, 1.0f} },
+			{ { -0.5f, -0.5f, -0.5f }, {0.0f, 0.0f, 0.0f, 1.0f} }
 		};
 
 		D3D11_BUFFER_DESC vertexBufferDescription
 		{
-			.ByteWidth           = 3 * sizeof(Vertex),
+			.ByteWidth           = 8 * sizeof(Vertex),
 			.Usage               = D3D11_USAGE_DEFAULT,
 			.BindFlags           = D3D11_BIND_VERTEX_BUFFER,
 			.CPUAccessFlags      = 0,
@@ -345,7 +376,7 @@ namespace mk
 
 		D3D11_SUBRESOURCE_DATA vertexBufferData
 		{
-			.pSysMem          = triangleVertices,
+			.pSysMem          = vertices,
 			.SysMemPitch      = 0,
 			.SysMemSlicePitch = 0
 		};
@@ -362,14 +393,30 @@ namespace mk
 	void GraphicsSystem::CreateIndexBuffer()
 	{
 
-		unsigned short triangleIndices[] =
+		unsigned short indices[] =
 		{
-		   0, 1, 2
+			0, 1, 2,
+			0, 2, 3,
+
+			4, 5, 6,
+			4, 6, 7,
+
+			3, 2, 5,
+			3, 5, 4,
+
+			2, 1, 6,
+			2, 6, 5,
+
+			1, 7, 6,
+			1, 0, 7,
+
+			0, 3, 4,
+			0, 4, 7
 		};
 
 		D3D11_BUFFER_DESC indexBufferDescription
 		{
-			.ByteWidth		     = 3 * sizeof(unsigned short),
+			.ByteWidth		     = 36 * sizeof(unsigned short),
 			.Usage			     = D3D11_USAGE_DEFAULT,
 			.BindFlags		     = D3D11_BIND_INDEX_BUFFER,
 			.CPUAccessFlags	     = 0,
@@ -379,7 +426,7 @@ namespace mk
 
 		D3D11_SUBRESOURCE_DATA indexBufferData
 		{
-			.pSysMem          = triangleIndices,
+			.pSysMem          = indices,
 			.SysMemPitch      = 0,
 			.SysMemSlicePitch = 0
 		};
@@ -393,28 +440,129 @@ namespace mk
 		);
 	}
 
+	void GraphicsSystem::CreateConstantBuffer()
+	{
+		D3D11_BUFFER_DESC constantBufferDescription
+		{
+			.ByteWidth           = sizeof(_constantBufferData),
+			.Usage               = D3D11_USAGE_DEFAULT,
+			.BindFlags           = D3D11_BIND_CONSTANT_BUFFER,
+			.CPUAccessFlags      = 0,
+			.MiscFlags           = 0,
+			.StructureByteStride = 0
+		};
+		
+		ThrowIfFailed(
+			_device->CreateBuffer(
+				&constantBufferDescription,
+				nullptr,
+				&_constantBuffer
+			)
+		);
+
+		float xScale = 1.42814801f;
+		float yScale = 1.42814801f;
+
+		if (_outputWidth > _outputHeight)
+		{
+			xScale = yScale *
+				static_cast<float>(_outputHeight) /
+				static_cast<float>(_outputWidth);
+		}
+		else
+		{
+			yScale = xScale *
+				static_cast<float>(_outputWidth) /
+				static_cast<float>(_outputHeight);
+		}
+
+		_constantBufferData.projection =
+		{
+			xScale, 0.0f,    0.0f,   0.0f,
+			0.0f,   yScale,  0.0f,   0.0f,
+			0.0f,   0.0f,   -1.0f,  -0.01f,
+			0.0f,   0.0f,   -1.0f,   0.0f
+		};
+
+		_constantBufferData.view = 
+		{
+			-1.00000000f, 0.00000000f, 0.00000000f, 0.00000000f,
+			0.00000000f, 0.89442718f, 0.44721359f, 0.00000000f,
+			0.00000000f, 0.44721359f, -0.89442718f, -2.23606800f,
+			0.00000000f, 0.00000000f, 0.00000000f, 1.00000000f
+		};
+	}
+
 	void GraphicsSystem::Render()
 	{
-		_context->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
+		_constantBufferData.model = MatrixRotationY(-_angle);
 		
-		const float clearColor[] = { 0.392156899f, 0.584313750f, 0.929411829f, 1.000000000f };
+		_angle += 0.01f;
 
-		_context->ClearRenderTargetView(_renderTargetView.Get(), clearColor);
-		//_context->ClearDepthStencilView(_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		_context->UpdateSubresource(
+			_constantBuffer.Get(),
+			0,
+			nullptr,
+			&_constantBufferData,
+			0,
+			0
+		);
+		
+		_context->OMSetRenderTargets(
+			1, 
+			_renderTargetView.GetAddressOf(), 
+			_depthStencilView.Get()
+		);
+		
+		const float clearColor[] = { 0.098f, 0.098f, 0.439f, 1.000f };
+
+		_context->ClearRenderTargetView(
+			_renderTargetView.Get(), 
+			clearColor
+		);
+		
+		_context->ClearDepthStencilView(
+			_depthStencilView.Get(), 
+			D3D11_CLEAR_DEPTH, 
+			1.0f, 
+			0
+		);
 
 		_context->IASetInputLayout(_inputLayout.Get());
 
 		UINT stride = sizeof(Vertex);
 		UINT offset = 0;
-		_context->IASetVertexBuffers(0, 1, _vertexBuffer.GetAddressOf(), &stride, &offset);
-		_context->IASetIndexBuffer(_indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+		_context->IASetVertexBuffers(
+			0, 
+			1, 
+			_vertexBuffer.GetAddressOf(), 
+			&stride, 
+			&offset
+		);
+
+		_context->IASetIndexBuffer(
+			_indexBuffer.Get(), 
+			DXGI_FORMAT_R16_UINT, 
+			0
+		);
 
 		_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		
-		_context->VSSetShader(_vertexShader.Get(), nullptr, 0);
+		_context->VSSetShader(
+			_vertexShader.Get(), 
+			nullptr, 
+			0
+		);
+
+		_context->VSSetConstantBuffers(
+			0,
+			1,
+			_constantBuffer.GetAddressOf()
+		);
+
 		_context->PSSetShader(_pixelShader.Get(),  nullptr, 0);
 
-		_context->DrawIndexed(3, 0, 0);
+		_context->DrawIndexed(36, 0, 0);
 
 		ThrowIfFailed(_swapChain->Present(1, 0));
 	}
