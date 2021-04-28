@@ -69,7 +69,9 @@ export namespace mk
 		void CreateDevice();
 		void CreateSwapChain();
 		void CreateRenderTarget();
-		void CreateDepthStencil();
+		void CreatePipeline();
+		void CreateVertexBuffer();
+		void CreateIndexBuffer();
 
 		void Clear();
 		void Present();
@@ -80,22 +82,29 @@ export namespace mk
 		//std::unique_ptr<RenderDevice>  _renderDevice;
 		//std::unique_ptr<DeviceContext> _deviceContext;
 		//std::unique_ptr<SwapChain>     _swapChain;
+		
 		Window* _window;
+		std::size_t _outputWidth;
+		std::size_t _outputHeight;
 
 		ComPtr<IDXGIFactory>           _factory;
 		ComPtr<IDXGIAdapter>           _adapter;
 		ComPtr<ID3D11Device>           _device;
 		ComPtr<ID3D11DeviceContext>    _context;
+		
 		ComPtr<IDXGISwapChain>         _swapChain;
-
 		ComPtr<ID3D11Texture2D>        _renderTarget;
 		ComPtr<ID3D11Texture2D>        _depthStencil;
 		ComPtr<ID3D11RenderTargetView> _renderTargetView;
 		ComPtr<ID3D11DepthStencilView> _depthStencilView;
 
-		std::size_t _outputWidth;
-		std::size_t _outputHeight;
+		ComPtr<ID3D11InputLayout>      _inputLayout;
+		ComPtr<ID3D11Buffer>           _indexBuffer;
+		ComPtr<ID3D11Buffer>           _vertexBuffer;
+		ComPtr<ID3D11Buffer>           _constantBuffer;
 
+		ComPtr<ID3D11VertexShader>     _vertexShader;
+		ComPtr<ID3D11PixelShader>      _pixelShader;
 	};
 
 	

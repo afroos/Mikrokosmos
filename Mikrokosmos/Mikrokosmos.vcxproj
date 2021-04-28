@@ -77,7 +77,7 @@
       </Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>d3d11.lib;DXGI.lib;</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;DXGI.lib;d3dcompiler.lib;</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
     </Lib>
@@ -108,7 +108,7 @@
       </Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>d3d11.lib;DXGI.lib;</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;DXGI.lib;d3dcompiler.lib;</AdditionalDependencies>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
     </Lib>
