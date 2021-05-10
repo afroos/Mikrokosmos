@@ -46,7 +46,7 @@ namespace mk
 				createCommandPool();
 				createDepthResources();
 				createFramebuffers();
-				createTextureImage();
+						createTextureImage();
 				createTextureImageView();
 				createTextureSampler();
 				loadModel();
@@ -73,6 +73,7 @@ namespace mk
 		CreateVertexBuffer();
 		CreateIndexBuffer();
 		CreateConstantBuffer();
+		CreateTexture();
 	}
 
 	void GraphicsSystem::Shutdown()
@@ -332,14 +333,15 @@ namespace mk
 
 		const D3D11_INPUT_ELEMENT_DESC inputElementDescription[] =
 		{
-			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		ThrowIfFailed(
 			_device->CreateInputLayout(
 				inputElementDescription, 
-				2, 
+				3, 
 				vertexShaderCode->GetBufferPointer(), 
 				vertexShaderCode->GetBufferSize(), 
 				&_inputLayout
@@ -353,20 +355,40 @@ namespace mk
 
 		Vertex vertices[] =
 		{
-			{ { -0.5f, 0.5f, -0.5f  }, {0.0f, 1.0f, 0.0f, 1.0f} },
-			{ { 0.5f, 0.5f, -0.5f   }, {1.0f, 1.0f, 0.0f, 1.0f} },
-			{ { 0.5f, 0.5f,  0.5f   }, {1.0f, 1.0f, 1.0f, 1.0f} },
-			{ { -0.5f, 0.5f,  0.5f  }, {0.0f, 1.0f, 1.0f, 1.0f} },
+			{ {-0.5f, 0.5f, -0.5f }, {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f} }, // +Y {top face}
+			{ {0.5f, 0.5f, -0.5f  }, {0.0f, 1.0f, 0.0f},  {1.0f, 0.0f} },
+			{ {0.5f, 0.5f,  0.5f  }, {0.0f, 1.0f, 0.0f},  {1.0f, 1.0f} },
+			{ {-0.5f, 0.5f,  0.5f }, {0.0f, 1.0f, 0.0f},  {0.0f, 1.0f} },
 
-			{ { -0.5f, -0.5f,  0.5f }, {0.0f, 0.0f, 1.0f, 1.0f} },
-			{ { 0.5f, -0.5f,  0.5f  }, {1.0f, 0.0f, 1.0f, 1.0f} },
-			{ { 0.5f, -0.5f, -0.5f  }, {1.0f, 0.0f, 0.0f, 1.0f} },
-			{ { -0.5f, -0.5f, -0.5f }, {0.0f, 0.0f, 0.0f, 1.0f} }
+			{ {-0.5f, -0.5f,  0.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f} }, // -Y {bottom face}
+			{ {0.5f, -0.5f,  0.5f }, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f} },
+			{ {0.5f, -0.5f, -0.5f }, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f} },
+			{ {-0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f} },
+
+			{ {0.5f,  0.5f,  0.5f }, {1.0f, 0.0f, 0.0f},  {0.0f, 0.0f} }, // +X {right face}
+			{ {0.5f,  0.5f, -0.5f }, {1.0f, 0.0f, 0.0f},  {1.0f, 0.0f} },
+			{ {0.5f, -0.5f, -0.5f }, {1.0f, 0.0f, 0.0f},  {1.0f, 1.0f} },
+			{ {0.5f, -0.5f,  0.5f }, {1.0f, 0.0f, 0.0f},  {0.0f, 1.0f} },
+
+			{ {-0.5f,  0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f} }, // -X {left face}
+			{ {-0.5f,  0.5f,  0.5f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f} },
+			{ {-0.5f, -0.5f,  0.5f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f} },
+			{ {-0.5f, -0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f} },
+
+			{ {-0.5f,  0.5f, 0.5f }, {0.0f, 0.0f, 1.0f},  {0.0f, 0.0f} }, // +Z {front face}
+			{ {0.5f,  0.5f, 0.5f  }, {0.0f, 0.0f, 1.0f},  {1.0f, 0.0f} },
+			{ {0.5f, -0.5f, 0.5f  }, {0.0f, 0.0f, 1.0f},  {1.0f, 1.0f} },
+			{ {-0.5f, -0.5f, 0.5f }, {0.0f, 0.0f, 1.0f},  {0.0f, 1.0f} },
+
+			{ {0.5f,  0.5f, -0.5f }, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f} }, // -Z {back face}
+			{ {-0.5f,  0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f} },
+			{ {-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f} },
+			{ {0.5f, -0.5f, -0.5f }, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f} },
 		};
 
 		D3D11_BUFFER_DESC vertexBufferDescription
 		{
-			.ByteWidth           = 8 * sizeof(Vertex),
+			.ByteWidth           = 24 * sizeof(Vertex),
 			.Usage               = D3D11_USAGE_DEFAULT,
 			.BindFlags           = D3D11_BIND_VERTEX_BUFFER,
 			.CPUAccessFlags      = 0,
@@ -401,17 +423,17 @@ namespace mk
 			4, 5, 6,
 			4, 6, 7,
 
-			3, 2, 5,
-			3, 5, 4,
+			8, 9, 10,
+			8, 10, 11,
 
-			2, 1, 6,
-			2, 6, 5,
+			12, 13, 14,
+			12, 14, 15,
 
-			1, 7, 6,
-			1, 0, 7,
+			16, 17, 18,
+			16, 18, 19,
 
-			0, 3, 4,
-			0, 4, 7
+			20, 21, 22,
+			20, 22, 23
 		};
 
 		D3D11_BUFFER_DESC indexBufferDescription
@@ -493,6 +515,79 @@ namespace mk
 		};
 	}
 
+	void GraphicsSystem::CreateTexture()
+	{
+		auto textureData = load("texturedata.bin");
+
+		D3D11_SUBRESOURCE_DATA textureSubresourceData =
+		{
+			.pSysMem          = textureData.data(),
+			.SysMemPitch      = 1024,
+			.SysMemSlicePitch = 0
+		};
+
+		D3D11_TEXTURE2D_DESC textureDescription
+		{
+			.Width          = 256,
+			.Height         = 256,
+			.MipLevels	    = 1,
+			.ArraySize	    = 1,
+			.Format         = DXGI_FORMAT_R8G8B8A8_UNORM,
+			.SampleDesc	    = {.Count = 1, .Quality = 0 },
+			.Usage          = D3D11_USAGE_DEFAULT,
+			.BindFlags	    = D3D11_BIND_SHADER_RESOURCE,
+			.CPUAccessFlags = 0,
+			.MiscFlags	    = 0,
+		};
+
+		ComPtr<ID3D11Texture2D> texture;
+		ThrowIfFailed(
+			_device->CreateTexture2D(
+				&textureDescription,
+				&textureSubresourceData,
+				&texture
+			)
+		);
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC textureViewDescription
+		{
+			.Format        = textureDescription.Format,
+			.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D,
+			.Texture2D     = { .MostDetailedMip = 0, .MipLevels = textureDescription.MipLevels }
+		};
+
+		
+		ThrowIfFailed(
+			_device->CreateShaderResourceView(
+				texture.Get(),
+				&textureViewDescription,
+				&_textureView
+			)
+		);
+
+		D3D11_SAMPLER_DESC samplerDescription
+		{
+			.Filter         = D3D11_FILTER_MIN_MAG_MIP_LINEAR,
+			.AddressU       = D3D11_TEXTURE_ADDRESS_WRAP,
+			.AddressV       = D3D11_TEXTURE_ADDRESS_WRAP,
+			.AddressW       = D3D11_TEXTURE_ADDRESS_WRAP,
+			.MipLODBias     = 0.0f,
+			.MaxAnisotropy  = 0,
+			.ComparisonFunc = D3D11_COMPARISON_NEVER,
+			.BorderColor    = {0.0f, 0.0f, 0.0f, 0.0f},
+			.MinLOD         = 0,
+			.MaxLOD         = D3D11_FLOAT32_MAX
+		};
+
+		ThrowIfFailed(
+			_device->CreateSamplerState(
+				&samplerDescription,
+				&_samplerState
+			)
+		);
+	}
+
+
 	void GraphicsSystem::Render()
 	{
 		_constantBufferData.model = MatrixRotationY(-_angle);
@@ -561,6 +656,18 @@ namespace mk
 		);
 
 		_context->PSSetShader(_pixelShader.Get(),  nullptr, 0);
+
+		_context->PSSetShaderResources(
+			0,
+			1,
+			_textureView.GetAddressOf()
+		);
+
+		_context->PSSetSamplers(
+			0,
+			1,
+			_samplerState.GetAddressOf()
+		);
 
 		_context->DrawIndexed(36, 0, 0);
 

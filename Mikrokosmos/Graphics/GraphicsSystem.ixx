@@ -1,8 +1,12 @@
 module;
 
 #include <cmath>
+#include <cstddef>
+#include <filesystem>
+#include <fstream>
 #include <memory>
 #include <string>
+#include <vector>
 
 #define NOMINMAX
 #include <wrl/client.h>
@@ -16,6 +20,11 @@ import Mikrokosmos.UI.Window;
 
 export namespace mk
 {
+
+	struct float2
+	{
+		float x, y;
+	};
 
 	struct float3
 	{
@@ -57,7 +66,9 @@ export namespace mk
 	struct Vertex
 	{
 		float3 position;
-		float4 normal;
+		float4 color;
+		float3 normal;
+		float2 textureCoordinates;
 	};
 
 	struct ConstantBuffer
@@ -95,6 +106,29 @@ export namespace mk
 		M.m[3][3] = 1.0f;
 		
 		return M;
+	}
+
+	std::vector<std::byte> load(std::string const& filepath)
+	{
+		std::ifstream ifs(filepath, std::ios::binary | std::ios::ate);
+
+		if (!ifs);
+			//throw std::runtime_error(filepath + ": " + std::strerror(errno));
+
+		auto end = ifs.tellg();
+		ifs.seekg(0, std::ios::beg);
+
+		auto size = std::size_t(end - ifs.tellg());
+
+		if (size == 0) // avoid undefined behavior 
+			return {};
+
+		std::vector<std::byte> buffer(size);
+
+		if (!ifs.read((char*)buffer.data(), buffer.size()));
+			//throw std::runtime_error(filepath + ": " + std::strerror(errno));
+
+		return buffer;
 	}
 
 	class Direct3D11Exception : public std::exception
@@ -154,6 +188,7 @@ export namespace mk
 		void CreateVertexBuffer();
 		void CreateIndexBuffer();
 		void CreateConstantBuffer();
+		void CreateTexture();
 
 		void Clear();
 		void Present();
@@ -169,28 +204,31 @@ export namespace mk
 		std::size_t _outputWidth;
 		std::size_t _outputHeight;
 
-		ComPtr<IDXGIFactory>           _factory;
-		ComPtr<IDXGIAdapter>           _adapter;
-		ComPtr<ID3D11Device>           _device;
-		ComPtr<ID3D11DeviceContext>    _context;
-		
-		ComPtr<IDXGISwapChain>         _swapChain;
-		ComPtr<ID3D11Texture2D>        _renderTarget;
-		ComPtr<ID3D11Texture2D>        _depthStencil;
-		ComPtr<ID3D11RenderTargetView> _renderTargetView;
-		ComPtr<ID3D11DepthStencilView> _depthStencilView;
+		ComPtr<IDXGIFactory>             _factory;
+		ComPtr<IDXGIAdapter>             _adapter;
+		ComPtr<ID3D11Device>             _device;
+		ComPtr<ID3D11DeviceContext>      _context;
+									     
+		ComPtr<IDXGISwapChain>           _swapChain;
+		ComPtr<ID3D11Texture2D>          _renderTarget;
+		ComPtr<ID3D11Texture2D>          _depthStencil;
+		ComPtr<ID3D11RenderTargetView>   _renderTargetView;
+		ComPtr<ID3D11DepthStencilView>   _depthStencilView;
+									     
+		ComPtr<ID3D11InputLayout>        _inputLayout;
+		ComPtr<ID3D11Buffer>             _indexBuffer;
+		ComPtr<ID3D11Buffer>             _vertexBuffer;
+		ComPtr<ID3D11Buffer>             _constantBuffer;
+									     
+		ComPtr<ID3D11VertexShader>       _vertexShader;
+		ComPtr<ID3D11PixelShader>        _pixelShader;
+									     
+		ConstantBuffer                   _constantBufferData;
 
-		ComPtr<ID3D11InputLayout>      _inputLayout;
-		ComPtr<ID3D11Buffer>           _indexBuffer;
-		ComPtr<ID3D11Buffer>           _vertexBuffer;
-		ComPtr<ID3D11Buffer>           _constantBuffer;
+		ComPtr<ID3D11ShaderResourceView> _textureView;
+		ComPtr<ID3D11SamplerState>       _samplerState;
 
-		ComPtr<ID3D11VertexShader>     _vertexShader;
-		ComPtr<ID3D11PixelShader>      _pixelShader;
-
-		ConstantBuffer                 _constantBufferData;
-
-		float                          _angle               = 0.0f;
+		float                            _angle               = 0.0f;
 	};
 
 	
