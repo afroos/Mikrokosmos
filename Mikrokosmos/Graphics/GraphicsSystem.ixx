@@ -66,7 +66,6 @@ export namespace mk
 	struct Vertex
 	{
 		float3 position;
-		float4 color;
 		float3 normal;
 		float2 textureCoordinates;
 	};
@@ -175,6 +174,8 @@ export namespace mk
 		void Render();
 		void Shutdown();
 
+		void ResizeTarget(const Vector2u& newSize);
+
 	private:
 
 		std::unique_ptr<Renderer> CreateRenderer(const std::string& name);
@@ -182,15 +183,13 @@ export namespace mk
 		void CreateEntryPoint();
 		void PickAdapter();
 		void CreateDevice();
-		void CreateSwapChain();
-		void CreateRenderTarget();
+		void CreateTargetSizeDependentResources();
 		void CreatePipeline();
 		void CreateVertexBuffer();
 		void CreateIndexBuffer();
 		void CreateConstantBuffer();
 		void CreateTexture();
 
-		void Clear();
 		void Present();
 
 	private:
@@ -228,7 +227,7 @@ export namespace mk
 		ComPtr<ID3D11ShaderResourceView> _textureView;
 		ComPtr<ID3D11SamplerState>       _samplerState;
 
-		float                            _angle               = 0.0f;
+		float                            _angle               = 0.0f; // This value will be used to animate the cube by rotating it every frame.
 	};
 
 	

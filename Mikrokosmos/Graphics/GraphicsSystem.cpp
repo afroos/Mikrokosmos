@@ -32,32 +32,6 @@ namespace mk
 
 		//_swapChain = _renderer->CreateSwapChain({ .window = description.window });
 
-		/*void initVulkan() {
-						createInstance();
-				setupDebugMessenger();
-						createSurface();
-						pickPhysicalDevice();
-						createLogicalDevice();
-						createSwapChain();
-				createImageViews();
-				createRenderPass();
-				createDescriptorSetLayout();
-						createGraphicsPipeline();
-				createCommandPool();
-				createDepthResources();
-				createFramebuffers();
-						createTextureImage();
-				createTextureImageView();
-				createTextureSampler();
-				loadModel();
-						createVertexBuffer();
-						createIndexBuffer();
-						createUniformBuffers();
-				createDescriptorPool();
-				createDescriptorSets();
-				createCommandBuffers();
-				createSyncObjects();
-		}*/
 	}
 
 	void GraphicsSystem::Initialize()
@@ -67,8 +41,7 @@ namespace mk
 		CreateEntryPoint();
 		PickAdapter();
 		CreateDevice();
-		CreateSwapChain();
-		CreateRenderTarget();
+		CreateTargetSizeDependentResources();
 		CreatePipeline();
 		CreateVertexBuffer();
 		CreateIndexBuffer();
@@ -79,12 +52,15 @@ namespace mk
 	void GraphicsSystem::Shutdown()
 	{
 		//_renderer->Shutdown();
+	}
 
-		// Close and release all existing COM objects
-		/*_swapChain->Release();
-		_renderTargetView->Release();
-		_device->Release();
-		_context->Release();*/
+	void GraphicsSystem::ResizeTarget(const Vector2u& newSize)
+	{
+		_outputWidth      = newSize.X();
+		_outputHeight     = newSize.Y();
+		_renderTargetView = nullptr;
+		_depthStencilView = nullptr;
+		CreateTargetSizeDependentResources();
 	}
 
 	std::unique_ptr<Renderer> GraphicsSystem::CreateRenderer(const std::string& name)
@@ -93,8 +69,7 @@ namespace mk
 			std::string, 
 			std::function<std::unique_ptr<Renderer>()>> dispatchTable
 		{
-			{ "Direct3D11", []() { return std::make_unique<Direct3D11Renderer>(); } }/*,
-			{ "OpenGL",     []() { return std::make_unique<GLRenderer        >(); } }*/
+			{ "Direct3D11", []() { return std::make_unique<Direct3D11Renderer>(); } }
 		};
 
 		auto entry = dispatchTable.find(name);
@@ -118,12 +93,12 @@ namespace mk
 
 	void GraphicsSystem::PickAdapter()
 	{
-		return;
+
 	}
 
 	void GraphicsSystem::CreateDevice()
 	{
-		UINT creationFlags = 0;
+		UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
 		D3D_FEATURE_LEVEL featureLevels[] =
 		{
@@ -145,10 +120,10 @@ namespace mk
 				nullptr,                  // Software rasterizer module
 				creationFlags,            // Flags
 				featureLevels,            // Feature level
-				6,                        // Number of feature levels
+				ARRAYSIZE(featureLevels), // Number of feature levels
 				D3D11_SDK_VERSION,        // SDK version
 				&device,                  // Output device
-				0,                        // Output feature level
+				nullptr,                  // Output feature level
 				&context                  // Output device context
 			)
 		);
@@ -158,45 +133,69 @@ namespace mk
 
 	}
 
-	void GraphicsSystem::CreateSwapChain()
+	void GraphicsSystem::CreateTargetSizeDependentResources()
 	{
-		auto windowHandle = glfwGetWin32Window(reinterpret_cast<GLFWwindow*>(_window->NativeHandle()));
-
-		DXGI_SWAP_CHAIN_DESC swapChainDescription
+		if (_swapChain != nullptr)
 		{
-			.BufferDesc =
-			{
-				.Width            = static_cast<UINT>(_outputWidth),
-				.Height           = static_cast<UINT>(_outputHeight),
-				.RefreshRate      = {.Numerator = 0, .Denominator = 1 },
-				.Format           = DXGI_FORMAT_R8G8B8A8_UNORM,
-				.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED,
-				.Scaling          = DXGI_MODE_SCALING_UNSPECIFIED
-			},
-			.SampleDesc           = {.Count = 1, .Quality = 0 },
-			.BufferUsage          = DXGI_USAGE_BACK_BUFFER | DXGI_USAGE_RENDER_TARGET_OUTPUT,
-			.BufferCount          = 2,
-			.OutputWindow         = windowHandle,
-			.Windowed             = TRUE,
-			.SwapEffect           = DXGI_SWAP_EFFECT_DISCARD,
-			.Flags                = 0
-		};
+			// If the swap chain already exists, resize it.
+			ThrowIfFailed(
+				_swapChain->ResizeBuffers(
+					2,
+					static_cast<UINT>(_outputWidth),
+					static_cast<UINT>(_outputHeight),
+					DXGI_FORMAT_R8G8B8A8_UNORM,
+					0
+				)
+			);
+		}
+		else
+		{
+			// If the swap chain does not exist, create it.
+			auto windowHandle = glfwGetWin32Window(reinterpret_cast<GLFWwindow*>(_window->NativeHandle()));
 
+			DXGI_SWAP_CHAIN_DESC swapChainDescription
+			{
+				.BufferDesc =
+				{
+					.Width            = static_cast<UINT>(_outputWidth),
+					.Height           = static_cast<UINT>(_outputHeight),
+					.RefreshRate      = {.Numerator = 0, .Denominator = 1 },
+					.Format           = DXGI_FORMAT_R8G8B8A8_UNORM,
+					.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED,
+					.Scaling          = DXGI_MODE_SCALING_UNSPECIFIED
+				},
+				.SampleDesc           = {.Count = 1, .Quality = 0 },
+				.BufferUsage          = DXGI_USAGE_RENDER_TARGET_OUTPUT,
+				.BufferCount          = 2,
+				.OutputWindow         = windowHandle,
+				.Windowed             = TRUE,
+				.SwapEffect           = DXGI_SWAP_EFFECT_DISCARD,
+				.Flags                = 0
+			};
+
+			// Once the swap chain description is configured, it must be
+			// created on the same adapter as the existing D3D Device?
+
+			// Finally, create the swap chain.
+			ThrowIfFailed(
+				_factory->CreateSwapChain(
+					_device.Get(),
+					&swapChainDescription, 
+					&_swapChain
+				)
+			);
+
+		}
+
+		// Once the swap chain is created, create a render target view.  This will
+		// allow Direct3D to render graphics to the window.
 		ThrowIfFailed(
-			_factory->CreateSwapChain(
-				_device.Get(),
-				&swapChainDescription, 
-				&_swapChain
+			_swapChain->GetBuffer(
+				0,
+				IID_PPV_ARGS(_renderTarget.GetAddressOf())
 			)
 		);
 
-	}
-
-	void GraphicsSystem::CreateRenderTarget()
-	{
-
-		ThrowIfFailed(_swapChain->GetBuffer(0, IID_PPV_ARGS(_renderTarget.GetAddressOf())));
-		
 		ThrowIfFailed(
 			_device->CreateRenderTargetView(
 				_renderTarget.Get(),
@@ -205,20 +204,23 @@ namespace mk
 			)
 		);
 
+		// Once the render target view is created, create a depth stencil view.  This
+		// allows Direct3D to efficiently render objects closer to the camera in front
+		// of objects further from the camera.
 		D3D11_TEXTURE2D_DESC depthStencilDescription
 		{
-			.Width          = static_cast<UINT>(_outputWidth),
-			.Height         = static_cast<UINT>(_outputHeight),
-			.MipLevels      = 1,
-			.ArraySize      = 1,
-			.Format         = DXGI_FORMAT_D24_UNORM_S8_UINT,
-			.SampleDesc     = {.Count = 1, .Quality = 0},
-			.Usage          = D3D11_USAGE_DEFAULT,
-			.BindFlags      = D3D11_BIND_DEPTH_STENCIL,
+			.Width = static_cast<UINT>(_outputWidth),
+			.Height = static_cast<UINT>(_outputHeight),
+			.MipLevels = 1,
+			.ArraySize = 1,
+			.Format = DXGI_FORMAT_D24_UNORM_S8_UINT,
+			.SampleDesc = {.Count = 1, .Quality = 0},
+			.Usage = D3D11_USAGE_DEFAULT,
+			.BindFlags = D3D11_BIND_DEPTH_STENCIL,
 			.CPUAccessFlags = 0,
-			.MiscFlags      = 0
+			.MiscFlags = 0
 		};
-		
+
 		ThrowIfFailed(
 			_device->CreateTexture2D(
 				&depthStencilDescription,
@@ -229,10 +231,10 @@ namespace mk
 
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDescription
 		{
-			.Format        = depthStencilDescription.Format,
+			.Format = depthStencilDescription.Format,
 			.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D,
-			.Flags         = 0,
-			.Texture2D     = { .MipSlice = 0 }
+			.Flags = 0,
+			.Texture2D = {.MipSlice = 0 }
 		};
 
 		ThrowIfFailed(
@@ -243,29 +245,9 @@ namespace mk
 			)
 		);
 
-
-
-		/*CD3D11_TEXTURE2D_DESC depthStencilDescription(
-			DXGI_FORMAT_D24_UNORM_S8_UINT,
-			static_cast<UINT>(_outputWidth),
-			static_cast<UINT>(_outputHeight),
-			1,
-			1,
-			D3D11_BIND_DEPTH_STENCIL);
-
-		ThrowIfFailed(_device->CreateTexture2D(
-			&depthStencilDescription,
-			nullptr,
-			_depthStencil.GetAddressOf()
-		));
-
-		CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDescription(D3D11_DSV_DIMENSION_TEXTURE2D);
-		ThrowIfFailed(_device->CreateDepthStencilView(
-			_depthStencil.Get(),
-			&depthStencilViewDescription,
-			_depthStencilView.ReleaseAndGetAddressOf()
-		));*/
-
+		// After the render target and depth stencil views are created, specify that
+		// the viewport, which describes what portion of the window to draw to, should
+		// cover the entire window.
 		D3D11_VIEWPORT viewport
 		{
 			.TopLeftX = 0.0f,
@@ -277,13 +259,40 @@ namespace mk
 		};
 
 		_context->RSSetViewports(1, &viewport);
+		
+		// Finally, update the constant buffer perspective projection parameters
+		// to account for the size of the application window.  In this sample,
+		// the parameters are fixed to a 70-degree field of view, with a depth
+		// range of 0.01 to 100.
+		float xScale = 1.42814801f;
+		float yScale = 1.42814801f;
+
+		if (_outputWidth > _outputHeight)
+		{
+			xScale = yScale *
+				static_cast<float>(_outputHeight) /
+				static_cast<float>(_outputWidth);
+		}
+		else
+		{
+			yScale = xScale *
+				static_cast<float>(_outputWidth) /
+				static_cast<float>(_outputHeight);
+		}
+
+		_constantBufferData.projection =
+		{
+			xScale, 0.0f,    0.0f,   0.0f,
+			0.0f,   yScale,  0.0f,   0.0f,
+			0.0f,   0.0f,   -1.0f,  -0.01f,
+			0.0f,   0.0f,   -1.0f,   0.0f
+		};
 
 	}
 
 	void GraphicsSystem::CreatePipeline()
 	{
 		ComPtr<ID3DBlob> vertexShaderCode;
-		ComPtr<ID3DBlob> pixelShaderCode;
 		
 		ThrowIfFailed(
 			D3DCompileFromFile(
@@ -307,6 +316,26 @@ namespace mk
 				&_vertexShader
 			)
 		);
+
+		// Create an input layout that matches the layout defined in the vertex shader code.
+		const D3D11_INPUT_ELEMENT_DESC inputElementDescription[] =
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+
+		ThrowIfFailed(
+			_device->CreateInputLayout(
+				inputElementDescription,
+				3,
+				vertexShaderCode->GetBufferPointer(),
+				vertexShaderCode->GetBufferSize(),
+				&_inputLayout
+			)
+		);
+
+		ComPtr<ID3DBlob> pixelShaderCode;
 		
 		ThrowIfFailed(
 			D3DCompileFromFile(
@@ -331,28 +360,16 @@ namespace mk
 			)
 		);
 
-		const D3D11_INPUT_ELEMENT_DESC inputElementDescription[] =
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		};
 
-		ThrowIfFailed(
-			_device->CreateInputLayout(
-				inputElementDescription, 
-				3, 
-				vertexShaderCode->GetBufferPointer(), 
-				vertexShaderCode->GetBufferSize(), 
-				&_inputLayout
-			)
-		);
 
 	}
 
 	void GraphicsSystem::CreateVertexBuffer()
 	{
 
+		// In the array below, which will be used to initialize the cube vertex buffers,
+		// multiple vertices are used for each corner to allow different normal vectors and
+		// texture coordinates to be defined for each face.
 		Vertex vertices[] =
 		{
 			{ {-0.5f, 0.5f, -0.5f }, {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f} }, // +Y {top face}
@@ -388,7 +405,7 @@ namespace mk
 
 		D3D11_BUFFER_DESC vertexBufferDescription
 		{
-			.ByteWidth           = 24 * sizeof(Vertex),
+			.ByteWidth           = ARRAYSIZE(vertices) * sizeof(Vertex),
 			.Usage               = D3D11_USAGE_DEFAULT,
 			.BindFlags           = D3D11_BIND_VERTEX_BUFFER,
 			.CPUAccessFlags      = 0,
@@ -438,7 +455,7 @@ namespace mk
 
 		D3D11_BUFFER_DESC indexBufferDescription
 		{
-			.ByteWidth		     = 36 * sizeof(unsigned short),
+			.ByteWidth		     = ARRAYSIZE(indices) * sizeof(unsigned short),
 			.Usage			     = D3D11_USAGE_DEFAULT,
 			.BindFlags		     = D3D11_BIND_INDEX_BUFFER,
 			.CPUAccessFlags	     = 0,
@@ -464,6 +481,9 @@ namespace mk
 
 	void GraphicsSystem::CreateConstantBuffer()
 	{
+
+		// Create a constant buffer for passing model, view, and projection matrices
+		// to the vertex shader.
 		D3D11_BUFFER_DESC constantBufferDescription
 		{
 			.ByteWidth           = sizeof(_constantBufferData),
@@ -482,41 +502,20 @@ namespace mk
 			)
 		);
 
-		float xScale = 1.42814801f;
-		float yScale = 1.42814801f;
-
-		if (_outputWidth > _outputHeight)
-		{
-			xScale = yScale *
-				static_cast<float>(_outputHeight) /
-				static_cast<float>(_outputWidth);
-		}
-		else
-		{
-			yScale = xScale *
-				static_cast<float>(_outputWidth) /
-				static_cast<float>(_outputHeight);
-		}
-
-		_constantBufferData.projection =
-		{
-			xScale, 0.0f,    0.0f,   0.0f,
-			0.0f,   yScale,  0.0f,   0.0f,
-			0.0f,   0.0f,   -1.0f,  -0.01f,
-			0.0f,   0.0f,   -1.0f,   0.0f
-		};
-
+		// Specify the view transform corresponding to a camera position of
+		// X = 0, Y = 1, Z = 2.
 		_constantBufferData.view = 
 		{
-			-1.00000000f, 0.00000000f, 0.00000000f, 0.00000000f,
-			0.00000000f, 0.89442718f, 0.44721359f, 0.00000000f,
-			0.00000000f, 0.44721359f, -0.89442718f, -2.23606800f,
-			0.00000000f, 0.00000000f, 0.00000000f, 1.00000000f
+			-1.00000000f, 0.00000000f,  0.00000000f,  0.00000000f,
+			 0.00000000f, 0.89442718f,  0.44721359f,  0.00000000f,
+			 0.00000000f, 0.44721359f, -0.89442718f, -2.23606800f,
+			 0.00000000f, 0.00000000f,  0.00000000f,  1.00000000f
 		};
 	}
 
 	void GraphicsSystem::CreateTexture()
 	{
+		// Load the raw texture data from disk and construct a subresource description that references it.
 		auto textureData = load("texturedata.bin");
 
 		D3D11_SUBRESOURCE_DATA textureSubresourceData =
@@ -556,7 +555,6 @@ namespace mk
 			.Texture2D     = { .MostDetailedMip = 0, .MipLevels = textureDescription.MipLevels }
 		};
 
-		
 		ThrowIfFailed(
 			_device->CreateShaderResourceView(
 				texture.Get(),
@@ -587,9 +585,9 @@ namespace mk
 		);
 	}
 
-
 	void GraphicsSystem::Render()
 	{
+		// Update the constant buffer to rotate the cube model.
 		_constantBufferData.model = MatrixRotationY(-_angle);
 		
 		_angle += 0.01f;
@@ -603,12 +601,14 @@ namespace mk
 			0
 		);
 		
+		// Specify the render target and depth stencil we created as the output target.
 		_context->OMSetRenderTargets(
 			1, 
 			_renderTargetView.GetAddressOf(), 
 			_depthStencilView.Get()
 		);
 		
+		// Clear the render target to a solid color, and reset the depth stencil.
 		const float clearColor[] = { 0.098f, 0.098f, 0.439f, 1.000f };
 
 		_context->ClearRenderTargetView(
@@ -625,6 +625,7 @@ namespace mk
 
 		_context->IASetInputLayout(_inputLayout.Get());
 
+		// Set the vertex and index buffers, and specify the way they define geometry.
 		UINT stride = sizeof(Vertex);
 		UINT offset = 0;
 		_context->IASetVertexBuffers(
@@ -643,6 +644,7 @@ namespace mk
 
 		_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		
+		// Set the vertex and pixel shader stage state.
 		_context->VSSetShader(
 			_vertexShader.Get(), 
 			nullptr, 
@@ -655,7 +657,11 @@ namespace mk
 			_constantBuffer.GetAddressOf()
 		);
 
-		_context->PSSetShader(_pixelShader.Get(),  nullptr, 0);
+		_context->PSSetShader(
+			_pixelShader.Get(),  
+			nullptr, 
+			0
+		);
 
 		_context->PSSetShaderResources(
 			0,
@@ -669,7 +675,11 @@ namespace mk
 			_samplerState.GetAddressOf()
 		);
 
-		_context->DrawIndexed(36, 0, 0);
+		_context->DrawIndexed(
+			36, 
+			0, 
+			0
+		);
 
 		ThrowIfFailed(_swapChain->Present(1, 0));
 	}
