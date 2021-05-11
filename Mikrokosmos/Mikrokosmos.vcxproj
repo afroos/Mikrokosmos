@@ -115,6 +115,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core.h" />
+    <ClInclude Include="Graphics\Rendering\Direct3D11\Direct3D11.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Applications\Application.cpp" />
@@ -135,6 +136,7 @@
     <ClCompile Include="Graphics\Graphics.ixx" />
     <ClCompile Include="Graphics\GraphicsSystem.cpp" />
     <ClCompile Include="Graphics\GraphicsSystem.ixx" />
+    <ClCompile Include="Graphics\Rendering\Adapter.ixx" />
     <ClCompile Include="Graphics\Rendering\Direct3D11\Direct3D11Renderer.ixx" />
     <ClCompile Include="Graphics\Rendering\Resource.ixx" />
     <ClCompile Include="Graphics\Rendering\DeviceContext.ixx" />
@@ -143,7 +145,7 @@
     <ClCompile Include="Graphics\Rendering\GL\GLRenderer.ixx" />
     <ClCompile Include="Graphics\Rendering\GL\GLSwapChain.ixx" />
     <ClCompile Include="Graphics\Rendering\Renderer.ixx" />
-    <ClCompile Include="Graphics\Rendering\RenderDevice.ixx" />
+    <ClCompile Include="Graphics\Rendering\Device.ixx" />
     <ClCompile Include="Graphics\Rendering\Rendering.ixx" />
     <ClCompile Include="Graphics\Rendering\Buffer.ixx" />
     <ClCompile Include="Graphics\Rendering\SwapChain.ixx" />

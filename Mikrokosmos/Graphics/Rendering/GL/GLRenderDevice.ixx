@@ -2,19 +2,19 @@ module;
 
 export module Mikrokosmos.Graphics.Rendering.GLRenderDevice;
 
-import Mikrokosmos.Graphics.Rendering.RenderDevice;
+import Mikrokosmos.Graphics.Rendering.Device;
 
 
 export namespace mk
 {
 
-	class GLRenderDevice : public RenderDevice
+	class GLRenderDevice : public Device
 	{
 
 	public:
 
 		GLRenderDevice() = delete;
-		GLRenderDevice(const RenderDevice::Description& description);
+		GLRenderDevice(const Device::Description& description);
 
 		virtual ~GLRenderDevice() = default;
 
@@ -26,9 +26,9 @@ module :private;
 
 namespace mk
 {
-	GLRenderDevice::GLRenderDevice(const RenderDevice::Description& description)
+	GLRenderDevice::GLRenderDevice(const Device::Description& description)
 		:
-		RenderDevice{ description }
+		Device{ description }
 	{
 
 	}

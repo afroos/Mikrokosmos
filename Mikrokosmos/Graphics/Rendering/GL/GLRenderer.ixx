@@ -19,7 +19,7 @@ export namespace mk
 
 		GLRenderer() = default;
 
-		//std::unique_ptr<RenderDevice>  CreateRenderDevice  (const RenderDevice::Description& description ) override;
+		//std::unique_ptr<Device>  CreateRenderDevice  (const Device::Description& description ) override;
 		//std::unique_ptr<DeviceContext> CreateDeviceContext (const DeviceContext::Description& description) override;
 		//std::unique_ptr<SwapChain>     CreateSwapChain     (const SwapChain::Description& description    ) override;
 
@@ -39,7 +39,7 @@ module :private;
 namespace mk
 {
 
-	/*std::unique_ptr<RenderDevice> GLRenderer::CreateRenderDevice(const RenderDevice::Description& description)
+	/*std::unique_ptr<Device> GLRenderer::CreateRenderDevice(const Device::Description& description)
 	{
 		return std::make_unique<GLRenderDevice>(description);
 	}

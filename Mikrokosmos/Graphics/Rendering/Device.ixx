@@ -2,14 +2,14 @@ module;
 
 //#include <>
 
-export module Mikrokosmos.Graphics.Rendering.RenderDevice;
+export module Mikrokosmos.Graphics.Rendering.Device;
 
 //import Mikrokosmos.Events.Event;
 
 export namespace mk
 {
 
-	class RenderDevice
+	class Device
 	{
 
 	public:
@@ -19,10 +19,10 @@ export namespace mk
 			Description() = default;
 		};
 
-		RenderDevice() = delete;
-		RenderDevice(const Description& description = {});
+		Device() = delete;
+		Device(const Description& description = {});
 
-		virtual ~RenderDevice() = default;
+		virtual ~Device() = default;
 
 		//virtual Buffer* CreateBuffer(const BufferDescription& description = {});
 		//Texture* CreateTexture(TextureDescription);
@@ -37,7 +37,7 @@ module :private;
 
 namespace mk
 {
-	RenderDevice::RenderDevice(const RenderDevice::Description& description)
+	Device::Device(const Device::Description& description)
 	{
 
 	}

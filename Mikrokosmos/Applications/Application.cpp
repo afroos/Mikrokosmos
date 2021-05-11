@@ -117,7 +117,7 @@ namespace mk
 	void Application::OnWindowResizedEvent(WindowResizedEvent& event)
 	{
 		//_minimized = (event.NewSize() == Vector2u::Zero());
-		//_graphicsSystem.ResizeTarget(event.NewSize());
+		_graphicsSystem.ResizeTarget(event.NewSize());
 		event.Handled(true);
 	}
 

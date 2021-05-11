@@ -18,6 +18,9 @@
     <ClInclude Include="Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Rendering\Direct3D11\Direct3D11.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mikrokosmos.ixx">
@@ -122,7 +125,7 @@
     <ClCompile Include="Graphics\Rendering\DeviceContext.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Rendering\RenderDevice.ixx">
+    <ClCompile Include="Graphics\Rendering\Device.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Rendering\SwapChain.ixx">
@@ -162,6 +165,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Rendering\Direct3D11\Direct3D11Renderer.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Rendering\Adapter.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

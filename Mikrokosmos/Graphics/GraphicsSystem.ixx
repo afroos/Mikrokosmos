@@ -8,9 +8,7 @@ module;
 #include <string>
 #include <vector>
 
-#define NOMINMAX
-#include <wrl/client.h>
-#include <d3d11.h>
+#include <Mikrokosmos/Graphics/Rendering/Direct3D11/Direct3D11.h>
 
 export module Mikrokosmos.Graphics.GraphicsSystem;
 
@@ -130,37 +128,12 @@ export namespace mk
 		return buffer;
 	}
 
-	class Direct3D11Exception : public std::exception
-	{
-	public:
-		Direct3D11Exception(HRESULT hr) : result(hr) {}
-
-		virtual const char* what() const override
-		{
-			static char message[64] = {};
-			sprintf_s(message, "Failure with HRESULT of %08X", static_cast<unsigned int>(result));
-			return message;
-		}
-
-	private:
-		HRESULT result;
-	};
-
-	inline void ThrowIfFailed(HRESULT hr)
-	{
-		if (FAILED(hr))
-		{
-			throw Direct3D11Exception(hr);
-		}
-	}
-
 	class GraphicsSystem
 	{
 
 	public:
 
-		template <typename T>
-		using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 
 		struct Description
 		{
@@ -195,7 +168,7 @@ export namespace mk
 	private:
 
 		std::unique_ptr<Renderer>        _renderer;
-		//std::unique_ptr<RenderDevice>  _renderDevice;
+		//std::unique_ptr<Device>  _renderDevice;
 		//std::unique_ptr<DeviceContext> _deviceContext;
 		//std::unique_ptr<SwapChain>     _swapChain;
 		
@@ -205,10 +178,10 @@ export namespace mk
 
 		ComPtr<IDXGIFactory>             _factory;
 		ComPtr<IDXGIAdapter>             _adapter;
-		ComPtr<ID3D11Device>             _device;
-		ComPtr<ID3D11DeviceContext>      _context;
+		ComPtr<ID3D11Device1>            _device;
+		ComPtr<ID3D11DeviceContext1>     _context;
 									     
-		ComPtr<IDXGISwapChain>           _swapChain;
+		ComPtr<IDXGISwapChain1>          _swapChain;
 		ComPtr<ID3D11Texture2D>          _renderTarget;
 		ComPtr<ID3D11Texture2D>          _depthStencil;
 		ComPtr<ID3D11RenderTargetView>   _renderTargetView;

@@ -4,9 +4,7 @@ module;
 #include <map>
 #include <memory>
 
-#include <dxgi.h>
-#include <d3d11.h>
-#include <d3dcompiler.h>
+#include <Mikrokosmos/Graphics/Rendering/Direct3D11/Direct3D11.h>
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3.h>
@@ -26,7 +24,7 @@ namespace mk
 	{
 		_renderer = CreateRenderer(description.renderer);
 
-		//_renderDevice = _renderer->CreateRenderDevice(RenderDevice::Description{});
+		//_renderDevice = _renderer->CreateRenderDevice(Device::Description{});
 
 		//_deviceContext = _renderer->CreateDeviceContext(DeviceContext::Description{});
 
@@ -84,11 +82,11 @@ namespace mk
 
 	void GraphicsSystem::CreateEntryPoint()
 	{
-		ThrowIfFailed(
+		/*ThrowIfFailed(
 			CreateDXGIFactory(
 				IID_PPV_ARGS(_factory.ReleaseAndGetAddressOf())
 			)
-		);
+		);*/
 	}
 
 	void GraphicsSystem::PickAdapter()
@@ -99,6 +97,11 @@ namespace mk
 	void GraphicsSystem::CreateDevice()
 	{
 		UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+
+		#if defined(DEBUG)
+				// If the project is in a debug build, enable debugging via SDK Layers with this flag.
+				creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+		#endif
 
 		D3D_FEATURE_LEVEL featureLevels[] =
 		{
@@ -128,6 +131,7 @@ namespace mk
 			)
 		);
 
+		// Retrieve the Direct3D 11.1 interfaces.
 		ThrowIfFailed(device.As(&_device));
 		ThrowIfFailed(context.As(&_context));
 
@@ -141,8 +145,8 @@ namespace mk
 			ThrowIfFailed(
 				_swapChain->ResizeBuffers(
 					2,
-					static_cast<UINT>(_outputWidth),
-					static_cast<UINT>(_outputHeight),
+					0,
+					0,
 					DXGI_FORMAT_R8G8B8A8_UNORM,
 					0
 				)
@@ -151,36 +155,57 @@ namespace mk
 		else
 		{
 			// If the swap chain does not exist, create it.
-			auto windowHandle = glfwGetWin32Window(reinterpret_cast<GLFWwindow*>(_window->NativeHandle()));
 
-			DXGI_SWAP_CHAIN_DESC swapChainDescription
+			DXGI_SWAP_CHAIN_DESC1 swapChainDescription
 			{
-				.BufferDesc =
-				{
-					.Width            = static_cast<UINT>(_outputWidth),
-					.Height           = static_cast<UINT>(_outputHeight),
-					.RefreshRate      = {.Numerator = 0, .Denominator = 1 },
-					.Format           = DXGI_FORMAT_R8G8B8A8_UNORM,
-					.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED,
-					.Scaling          = DXGI_MODE_SCALING_UNSPECIFIED
-				},
-				.SampleDesc           = {.Count = 1, .Quality = 0 },
-				.BufferUsage          = DXGI_USAGE_RENDER_TARGET_OUTPUT,
-				.BufferCount          = 2,
-				.OutputWindow         = windowHandle,
-				.Windowed             = TRUE,
-				.SwapEffect           = DXGI_SWAP_EFFECT_DISCARD,
-				.Flags                = 0
+				.Width = static_cast<UINT>(_outputWidth),
+				.Height = static_cast<UINT>(_outputHeight),
+				.Format = DXGI_FORMAT_R8G8B8A8_UNORM,
+				.Stereo = false,
+				.SampleDesc = {.Count = 1, .Quality = 0 },
+				.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT,
+				.BufferCount = 2,
+				.Scaling = DXGI_SCALING_NONE,
+				.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL,
+				.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED,
+				.Flags = 0
 			};
 
 			// Once the swap chain description is configured, it must be
-			// created on the same adapter as the existing D3D Device?
+			// created on the same adapter as the existing D3D Device.
+
+			// First, retrieve the underlying DXGI Device from the D3D Device.
+			ComPtr<IDXGIDevice2> dxgiDevice;
+			ThrowIfFailed(
+				_device.As(&dxgiDevice)
+			);
+
+			// Ensure that DXGI does not queue more than one frame at a time. This both reduces
+			// latency and ensures that the application will only render after each VSync, minimizing
+			// power consumption.
+			ThrowIfFailed(
+				dxgiDevice->SetMaximumFrameLatency(1)
+			);
+
+			// Next, get the parent factory from the DXGI Device.
+			ComPtr<IDXGIAdapter> dxgiAdapter;
+			ThrowIfFailed(
+				dxgiDevice->GetAdapter(&dxgiAdapter)
+			);
+
+			ComPtr<IDXGIFactory2> dxgiFactory;
+			ThrowIfFailed(
+				dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory))
+			);
 
 			// Finally, create the swap chain.
 			ThrowIfFailed(
-				_factory->CreateSwapChain(
+				dxgiFactory->CreateSwapChainForHwnd(
 					_device.Get(),
+					glfwGetWin32Window(reinterpret_cast<GLFWwindow*>(_window->NativeHandle())),
 					&swapChainDescription, 
+					nullptr,
+					nullptr,
 					&_swapChain
 				)
 			);
@@ -192,7 +217,7 @@ namespace mk
 		ThrowIfFailed(
 			_swapChain->GetBuffer(
 				0,
-				IID_PPV_ARGS(_renderTarget.GetAddressOf())
+				IID_PPV_ARGS(&_renderTarget)
 			)
 		);
 
@@ -359,8 +384,6 @@ namespace mk
 				&_pixelShader
 			)
 		);
-
-
 
 	}
 
@@ -590,7 +613,7 @@ namespace mk
 		// Update the constant buffer to rotate the cube model.
 		_constantBufferData.model = MatrixRotationY(-_angle);
 		
-		_angle += 0.01f;
+		_angle += 0.0001f;
 
 		_context->UpdateSubresource(
 			_constantBuffer.Get(),

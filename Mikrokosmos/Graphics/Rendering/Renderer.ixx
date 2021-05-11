@@ -6,7 +6,7 @@ module;
 export module Mikrokosmos.Graphics.Rendering.Renderer;
 
 import Mikrokosmos.Graphics.Rendering.DeviceContext;
-import Mikrokosmos.Graphics.Rendering.RenderDevice;
+import Mikrokosmos.Graphics.Rendering.Device;
 import Mikrokosmos.Graphics.Rendering.SwapChain;
 
 export namespace mk
@@ -30,7 +30,7 @@ export namespace mk
 		
 		virtual ~Renderer() = default;
 
-		//virtual std::unique_ptr<RenderDevice>  CreateRenderDevice  (const RenderDevice::Description&  description ) = 0;
+		//virtual std::unique_ptr<Device>        CreateDevice        (const Device::Description&        description ) = 0;
 		//virtual std::unique_ptr<DeviceContext> CreateDeviceContext (const DeviceContext::Description& description ) = 0;
 		//virtual std::unique_ptr<SwapChain>     CreateSwapChain     (const SwapChain::Description&     description ) = 0;
 
