@@ -1,21 +1,14 @@
 #pragma once
 
 #define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
 
 #include <wrl/client.h>
 
 #include <d3d11_1.h>
-
 #include <dxgi1_6.h>
-
 #include <d3dcompiler.h>
-
-
-template <typename T>
-using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 class Direct3D11Exception : public std::exception
 {

@@ -61,11 +61,6 @@ namespace mk
 
 	LayerStack::~LayerStack()
 	{
-		for (auto layer : _layers)
-		{
-			layer->OnDetach();
-			delete layer;
-		}
 	}
 
 	void LayerStack::PushLayer(Layer* layer)

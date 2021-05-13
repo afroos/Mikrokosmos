@@ -36,17 +36,21 @@ export namespace mk
 		Application& operator=(const Application&) = delete;
 		Application& operator=(Application&&)      = delete;
 
-		void Run();
-
-		void OnEvent(Event& event);
-
 		static Application& Get();
+
+		virtual void OnInitialize()         {};
+		virtual void OnShutdown()           {};
+		virtual void OnSuspend()            {};
+		virtual void OnResume()             {};
+		virtual void OnUpdate()             {};
+		virtual void OnEvent(Event& event);
+
+		void Run();
+		void MainLoop();
 
 		Window& Window() const;
 
 		mk::DebugLayer* DebugLayer();
-
-	protected:
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
@@ -58,21 +62,16 @@ export namespace mk
 
 	private:
 
-		inline static Application* _instance{ nullptr };
+		inline static Application*  _instance  { nullptr };
 
-		std::string _name;
+		std::string                 _name;
 		std::unique_ptr<mk::Window> _window;
-
-		GraphicsSystem _graphicsSystem;
-
-		LayerStack _layerStack;
-
-		mk::DebugLayer* _debugLayer;
-
-		bool _running   { true  };
-		bool _minimized { false };
-
-		unsigned int vertexArrayId, vertexBufferId, indexBufferId;
+		bool                        _running        { true  };
+		bool                        _minimized      { false };
+		bool                        _suspended      { false };
+		GraphicsSystem              _graphicsSystem;
+		LayerStack                  _layerStack;
+		mk::DebugLayer*             _debugLayer;
 
 	};
 

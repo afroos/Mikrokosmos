@@ -164,7 +164,7 @@ export namespace mk
 	}
 
 	template <std::size_t Dimension, typename Scalar>
-	constexpr Vector<Dimension, Scalar> operator==(const Vector<Dimension, Scalar>& vector1, const Vector<Dimension, Scalar>& vector2) noexcept
+	constexpr bool operator==(const Vector<Dimension, Scalar>& vector1, const Vector<Dimension, Scalar>& vector2) noexcept
 	{
 		for (Index i = 0; i < vector1.Size(); ++i)
 		{
@@ -174,7 +174,7 @@ export namespace mk
 	}
 
 	template <std::size_t Dimension, typename Scalar>
-	constexpr Vector<Dimension, Scalar> operator!=(const Vector<Dimension, Scalar>& vector1, const Vector<Dimension, Scalar>& vector2) noexcept
+	constexpr bool operator!=(const Vector<Dimension, Scalar>& vector1, const Vector<Dimension, Scalar>& vector2) noexcept
 	{
 		return !(vector1 == vector2);
 	}

@@ -24,7 +24,7 @@ export namespace mk
 
 	private:
 
-		ComPtr<IDXGIFactory> _factory;
+		Microsoft::WRL::ComPtr<IDXGIFactory2> _factory;
 	};
 
 }
@@ -37,7 +37,7 @@ namespace mk
 	Direct3D11Renderer::Direct3D11Renderer()
 	{
 		ThrowIfFailed(
-			CreateDXGIFactory(
+			CreateDXGIFactory1(
 				IID_PPV_ARGS(_factory.ReleaseAndGetAddressOf())
 			)
 		);

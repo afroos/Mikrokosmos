@@ -31,6 +31,11 @@ namespace mk
 
 	Application::~Application()
 	{
+		for (auto layer : _layerStack)
+		{
+			layer->OnDetach();
+			delete layer;
+		}
 		_graphicsSystem.Shutdown();
 	}
 
@@ -38,29 +43,35 @@ namespace mk
 	{
 		mk::Trace("Application started.");
 
+		OnInitialize();
+		MainLoop();
+		OnShutdown();
+	}
+
+	void Application::MainLoop()
+	{
 		while (_running)
 		{
 			_window->ProcessEvents();
 
-			if (!_minimized)
-			{
-			}
-
-			for (auto layer : _layerStack)
-			{
-				layer->OnUpdate();
-			}
-
-			//_debugLayer->Begin();
+			if (!_suspended)
 			{
 				for (auto layer : _layerStack)
 				{
-					layer->OnRender();
+					layer->OnUpdate();
 				}
-			}
-			//_debugLayer->End();
 
-			_graphicsSystem.Render();
+				//_debugLayer->Begin();
+				{
+					for (auto layer : _layerStack)
+					{
+						layer->OnRender();
+					}
+				}
+				//_debugLayer->End();
+
+				_graphicsSystem.Render();
+			}	
 		}
 	}
 
@@ -116,8 +127,31 @@ namespace mk
 
 	void Application::OnWindowResizedEvent(WindowResizedEvent& event)
 	{
-		//_minimized = (event.NewSize() == Vector2u::Zero());
-		_graphicsSystem.ResizeTarget(event.NewSize());
+		if (event.NewSize() == Vector2u::Zero())
+		{
+			if (!_minimized)
+			{
+				_minimized = true;
+				if (!_suspended)
+				{
+					OnSuspend();
+				}
+					
+				_suspended = true;
+			}
+		}
+		else
+		{
+			_minimized = false;
+			if (_suspended)
+			{
+				OnResume();
+			}
+				
+			_suspended = false;
+		}
+
+		_graphicsSystem.OnWindowResized(event.NewSize());
 		event.Handled(true);
 	}
 

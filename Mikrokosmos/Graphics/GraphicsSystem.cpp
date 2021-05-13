@@ -24,7 +24,7 @@ namespace mk
 	{
 		_renderer = CreateRenderer(description.renderer);
 
-		//_renderDevice = _renderer->CreateRenderDevice(Device::Description{});
+		//_device = _renderer->CreateDevice(Device::Description{});
 
 		//_deviceContext = _renderer->CreateDeviceContext(DeviceContext::Description{});
 
@@ -52,7 +52,7 @@ namespace mk
 		//_renderer->Shutdown();
 	}
 
-	void GraphicsSystem::ResizeTarget(const Vector2u& newSize)
+	void GraphicsSystem::OnWindowResized(const Vector2u& newSize)
 	{
 		_outputWidth      = newSize.X();
 		_outputHeight     = newSize.Y();
@@ -82,11 +82,11 @@ namespace mk
 
 	void GraphicsSystem::CreateEntryPoint()
 	{
-		/*ThrowIfFailed(
-			CreateDXGIFactory(
+		ThrowIfFailed(
+			CreateDXGIFactory1(
 				IID_PPV_ARGS(_factory.ReleaseAndGetAddressOf())
 			)
-		);*/
+		);
 	}
 
 	void GraphicsSystem::PickAdapter()
@@ -113,8 +113,8 @@ namespace mk
 			D3D_FEATURE_LEVEL_9_1
 		};
 
-		ComPtr<ID3D11Device> device;
-		ComPtr<ID3D11DeviceContext> context;
+		Microsoft::WRL::ComPtr<ID3D11Device> device;
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext> context;
 
 		ThrowIfFailed(
 			D3D11CreateDevice(
@@ -175,7 +175,7 @@ namespace mk
 			// created on the same adapter as the existing D3D Device.
 
 			// First, retrieve the underlying DXGI Device from the D3D Device.
-			ComPtr<IDXGIDevice2> dxgiDevice;
+			Microsoft::WRL::ComPtr<IDXGIDevice2> dxgiDevice;
 			ThrowIfFailed(
 				_device.As(&dxgiDevice)
 			);
@@ -188,12 +188,12 @@ namespace mk
 			);
 
 			// Next, get the parent factory from the DXGI Device.
-			ComPtr<IDXGIAdapter> dxgiAdapter;
+			Microsoft::WRL::ComPtr<IDXGIAdapter> dxgiAdapter;
 			ThrowIfFailed(
 				dxgiDevice->GetAdapter(&dxgiAdapter)
 			);
 
-			ComPtr<IDXGIFactory2> dxgiFactory;
+			Microsoft::WRL::ComPtr<IDXGIFactory2> dxgiFactory;
 			ThrowIfFailed(
 				dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory))
 			);
@@ -269,21 +269,6 @@ namespace mk
 				&_depthStencilView
 			)
 		);
-
-		// After the render target and depth stencil views are created, specify that
-		// the viewport, which describes what portion of the window to draw to, should
-		// cover the entire window.
-		D3D11_VIEWPORT viewport
-		{
-			.TopLeftX = 0.0f,
-			.TopLeftY = 0.0f,
-			.Width    = static_cast<float>(_outputWidth),
-			.Height   = static_cast<float>(_outputHeight),
-			.MinDepth = D3D11_MIN_DEPTH,
-			.MaxDepth = D3D11_MAX_DEPTH
-		};
-
-		_context->RSSetViewports(1, &viewport);
 		
 		// Finally, update the constant buffer perspective projection parameters
 		// to account for the size of the application window.  In this sample,
@@ -317,7 +302,7 @@ namespace mk
 
 	void GraphicsSystem::CreatePipeline()
 	{
-		ComPtr<ID3DBlob> vertexShaderCode;
+		Microsoft::WRL::ComPtr<ID3DBlob> vertexShaderCode;
 		
 		ThrowIfFailed(
 			D3DCompileFromFile(
@@ -360,7 +345,7 @@ namespace mk
 			)
 		);
 
-		ComPtr<ID3DBlob> pixelShaderCode;
+		Microsoft::WRL::ComPtr<ID3DBlob> pixelShaderCode;
 		
 		ThrowIfFailed(
 			D3DCompileFromFile(
@@ -562,7 +547,7 @@ namespace mk
 			.MiscFlags	    = 0,
 		};
 
-		ComPtr<ID3D11Texture2D> texture;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
 		ThrowIfFailed(
 			_device->CreateTexture2D(
 				&textureDescription,
@@ -624,13 +609,6 @@ namespace mk
 			0
 		);
 		
-		// Specify the render target and depth stencil we created as the output target.
-		_context->OMSetRenderTargets(
-			1, 
-			_renderTargetView.GetAddressOf(), 
-			_depthStencilView.Get()
-		);
-		
 		// Clear the render target to a solid color, and reset the depth stencil.
 		const float clearColor[] = { 0.098f, 0.098f, 0.439f, 1.000f };
 
@@ -645,6 +623,27 @@ namespace mk
 			1.0f, 
 			0
 		);
+
+		// Specify the render target and depth stencil we created as the output target.
+		_context->OMSetRenderTargets(
+			1,
+			_renderTargetView.GetAddressOf(),
+			_depthStencilView.Get()
+		);
+
+		// Specify that the viewport, which describes what portion of the window to 
+		// draw to, should cover the entire window.
+		D3D11_VIEWPORT viewport
+		{
+			.TopLeftX = 0.0f,
+			.TopLeftY = 0.0f,
+			.Width = static_cast<float>(_outputWidth),
+			.Height = static_cast<float>(_outputHeight),
+			.MinDepth = D3D11_MIN_DEPTH,
+			.MaxDepth = D3D11_MAX_DEPTH
+		};
+
+		_context->RSSetViewports(1, &viewport);
 
 		_context->IASetInputLayout(_inputLayout.Get());
 

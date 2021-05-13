@@ -133,8 +133,6 @@ export namespace mk
 
 	public:
 
-
-
 		struct Description
 		{
 			std::string renderer = "Direct3D11";
@@ -147,7 +145,7 @@ export namespace mk
 		void Render();
 		void Shutdown();
 
-		void ResizeTarget(const Vector2u& newSize);
+		void OnWindowResized(const Vector2u& newSize);
 
 	private:
 
@@ -168,7 +166,7 @@ export namespace mk
 	private:
 
 		std::unique_ptr<Renderer>        _renderer;
-		//std::unique_ptr<Device>  _renderDevice;
+		//std::unique_ptr<Device>        _renderDevice;
 		//std::unique_ptr<DeviceContext> _deviceContext;
 		//std::unique_ptr<SwapChain>     _swapChain;
 		
@@ -176,31 +174,31 @@ export namespace mk
 		std::size_t _outputWidth;
 		std::size_t _outputHeight;
 
-		ComPtr<IDXGIFactory>             _factory;
-		ComPtr<IDXGIAdapter>             _adapter;
-		ComPtr<ID3D11Device1>            _device;
-		ComPtr<ID3D11DeviceContext1>     _context;
+		Microsoft::WRL::ComPtr<IDXGIFactory2>            _factory;
+		Microsoft::WRL::ComPtr<IDXGIAdapter>             _adapter;
+		Microsoft::WRL::ComPtr<ID3D11Device1>            _device;
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext1>     _context;
 									     
-		ComPtr<IDXGISwapChain1>          _swapChain;
-		ComPtr<ID3D11Texture2D>          _renderTarget;
-		ComPtr<ID3D11Texture2D>          _depthStencil;
-		ComPtr<ID3D11RenderTargetView>   _renderTargetView;
-		ComPtr<ID3D11DepthStencilView>   _depthStencilView;
+		Microsoft::WRL::ComPtr<IDXGISwapChain1>          _swapChain;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D>          _renderTarget;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D>          _depthStencil;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView>   _renderTargetView;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilView>   _depthStencilView;
 									     
-		ComPtr<ID3D11InputLayout>        _inputLayout;
-		ComPtr<ID3D11Buffer>             _indexBuffer;
-		ComPtr<ID3D11Buffer>             _vertexBuffer;
-		ComPtr<ID3D11Buffer>             _constantBuffer;
+		Microsoft::WRL::ComPtr<ID3D11InputLayout>        _inputLayout;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>             _indexBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>             _vertexBuffer;
+		Microsoft::WRL::ComPtr<ID3D11Buffer>             _constantBuffer;
 									     
-		ComPtr<ID3D11VertexShader>       _vertexShader;
-		ComPtr<ID3D11PixelShader>        _pixelShader;
+		Microsoft::WRL::ComPtr<ID3D11VertexShader>       _vertexShader;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader>        _pixelShader;
 									     
-		ConstantBuffer                   _constantBufferData;
+		ConstantBuffer                                   _constantBufferData;
 
-		ComPtr<ID3D11ShaderResourceView> _textureView;
-		ComPtr<ID3D11SamplerState>       _samplerState;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> _textureView;
+		Microsoft::WRL::ComPtr<ID3D11SamplerState>       _samplerState;
 
-		float                            _angle               = 0.0f; // This value will be used to animate the cube by rotating it every frame.
+		float                                            _angle               = 0.0f; // This value will be used to animate the cube by rotating it every frame.
 	};
 
 	
